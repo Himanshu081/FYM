@@ -46,7 +46,7 @@ class EmailAuth implements IAuthService {
   //     String college, String department) async {
   //   SignUpCredentail _credentail =
   //       SignUpCredentail(name, email, password, college, department);
-  //   var result = await _api.signUp(_credentail);
+  //   var result = await sut.signUp(_credentail);
   //   if (result.isError) return result.asError;
   //   return Result.value(Token(result.asValue.value));
   // }

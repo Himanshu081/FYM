@@ -8,5 +8,9 @@ class SignUpCredentail {
   final String department;
 
   SignUpCredentail(
-      this.name, this.email, this.password, this.college, this.department);
+      @required this.name,
+      @required this.email,
+      @required this.password,
+      @required this.college,
+      @required this.department);
 }

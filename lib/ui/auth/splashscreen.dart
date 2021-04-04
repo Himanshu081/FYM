@@ -53,7 +53,7 @@ class OnboardingScreen extends StatelessWidget {
           ),
         ],
         done:
-            Text('Login/SignUp', style: TextStyle(fontWeight: FontWeight.w600)),
+            Text('Get Started', style: TextStyle(fontWeight: FontWeight.w600)),
         onDone: () => goToHome(context),
         showSkipButton: true,
         skip: Text('Skip'),

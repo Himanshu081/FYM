@@ -5,23 +5,26 @@ import 'package:fym_test_1/auth/src/signup_service.dart';
 import 'package:fym_test_1/infra/api/auth_api.dart';
 import 'package:fym_test_1/infra/email_auth.dart';
 import 'package:fym_test_1/managers/auth_manager.dart';
+import 'package:fym_test_1/models/User.dart';
 import 'package:fym_test_1/state_management/auth/auth_cubit.dart';
 import 'package:fym_test_1/state_management/auth/auth_state.dart';
 import 'package:fym_test_1/auth/src/auth_service_contract.dart';
-import 'package:fym_test_1/auth/src/credentail.dart';
+// import 'package:fym_test_1/auth/src/credentail.dart';
 import 'package:fym_test_1/ui/auth/auth_page_adapters.dart';
 import 'package:fym_test_1/ui/homepage/homepage.dart';
 import 'package:fym_test_1/widgets/custom_flat_button.dart';
-import 'package:fym_test_1/widgets/custom_outline_button.dart';
+// import 'package:fym_test_1/widgets/custom_outline_button.dart';
 import 'package:fym_test_1/widgets/custom_text_field.dart';
+import 'package:fym_test_1/widgets/styles.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AuthPage extends StatefulWidget {
-  final ISignupService signupService;
+  final ISignupService _signupService;
   final AuthManager manager;
   final IAuthPageAdapter _adapter;
   final AuthApi authapi;
 
-  AuthPage(this.signupService, this.manager, this._adapter, this.authapi);
+  AuthPage(this._signupService, this.manager, this._adapter, this.authapi);
   @override
   _AuthPageState createState() => _AuthPageState();
 }
@@ -32,21 +35,31 @@ class _AuthPageState extends State<AuthPage> {
   String _username = '';
   String _email = '';
   String _password = '';
+  String _department = '';
+  String _college = '';
   IAuthService service;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          backgroundColor: Colors.white24,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          )),
+      resizeToAvoidBottomPadding: true,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 110.0),
+                padding: const EdgeInsets.only(top: 30.0),
                 child: _buildLogo(),
               ),
-              SizedBox(height: 50.0),
+              SizedBox(height: 30.0),
               CubitConsumer<AuthCubit, AuthState>(builder: (_, state) {
                 return _buildUI();
               }, listener: (context, state) {
@@ -79,35 +92,38 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   _buildLogo() => Container(
-        alignment: Alignment.center,
+        // alignment: Alignment.topRight,
+        // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
         child: Column(children: [
-          // SvgPicture.asset(
-          //   'assets/logo.svg',
-          //   fit: BoxFit.fill,
-          // ),
-          SizedBox(height: 10.0),
-          RichText(
-            text: TextSpan(
-                text: 'FYM',
-                style: Theme.of(context).textTheme.caption.copyWith(
-                      color: Colors.black,
-                      fontSize: 32.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                children: [
-                  TextSpan(
-                    text: ' Space',
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                    ),
-                  )
-                ]),
-          )
+          Container(
+            alignment: Alignment.centerLeft,
+            margin: EdgeInsets.only(left: 12),
+            child: Text(
+              "Welcome to FYM",
+              style: GoogleFonts.montserrat(
+                  fontSize: 38, fontWeight: FontWeight.w600),
+            ),
+          ),
+          verticalSpaceSmall,
+          Container(
+            alignment: Alignment.centerLeft,
+            // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            margin: EdgeInsets.only(left: 13, right: 35),
+            child: SizedBox(
+              child: Text(
+                "Fill the following form with correct details . Enjoy Working :)",
+                style: ktsMediumBodyText,
+              ),
+              width: screenWidthPercentage(context, percentage: 0.4),
+            ),
+          ),
+          verticalSpaceTiny
         ]),
       );
 
   _buildUI() => Container(
-        height: 500,
+        height: 510,
+        // decoration: BoxDecoration(border: Border.all(color: Colors.pink)),
         child: PageView(
           physics: NeverScrollableScrollPhysics(),
           controller: _controller,
@@ -119,18 +135,19 @@ class _AuthPageState extends State<AuthPage> {
       );
 
   _signIn() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
         child: Column(
           children: [
             ..._emailAndPassword(),
             SizedBox(height: 30.0),
             CustomFlatButton(
               text: 'Sign in',
-              size: Size(double.infinity, 54.0),
               onPressed: () {
                 print(_email + " " + _password);
+                // service = widget.manager.emailAuth("email");
                 service = EmailAuth(widget.authapi);
-                print("serive is" + service.toString());
+                print("Service  is" + service.toString());
+
                 (service as EmailAuth).credential(_email, _password);
 
                 CubitProvider.of<AuthCubit>(context).signin(service);
@@ -141,39 +158,22 @@ class _AuthPageState extends State<AuthPage> {
                 //     .signin(service, AuthType.email);
               },
             ),
-            SizedBox(height: 30.0),
-            // CustomOutlineButton(
-            //   text: 'Sign in with google',
-            //   size: Size(double.infinity, 50.0),
-            //   icon: SvgPicture.asset(
-            //     'assets/google-icon.svg',
-            //     height: 18.0,
-            //     width: 18.0,
-            //     fit: BoxFit.fill,
-            //   ),
-            //   onPressed: () {
-            //     service = widget._manager.service(AuthType.google);
-            //     CubitProvider.of<AuthCubit>(context)
-            //         .signin(service, AuthType.google);
-            //   },
-            // ),
+            verticalSpaceRegular,
             SizedBox(height: 30),
             RichText(
               text: TextSpan(
-                text: 'Don\'t have an account?',
-                style: Theme.of(context).textTheme.caption.copyWith(
-                      color: Colors.black,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.normal,
-                    ),
+                text: 'Don\'t have an account?  ',
+                style: GoogleFonts.montserrat(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black),
                 children: [
                   TextSpan(
-                    text: ' Sign up',
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    text: 'Sign up',
+                    style: GoogleFonts.montserrat(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                        color: kcprimary),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         _controller.nextPage(
@@ -188,64 +188,87 @@ class _AuthPageState extends State<AuthPage> {
         ),
       );
 
-  _signUp() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          children: [
-            CustomTextField(
-              inputAction: TextInputAction.next,
-              hint: 'Username',
-              fontSize: 18.0,
-              fontWeight: FontWeight.normal,
-              onChanged: (val) {
-                _username = val;
-              },
-            ),
-            SizedBox(height: 30.0),
-            ..._emailAndPassword(),
-            SizedBox(height: 30.0),
-            // CustomFlatButton(
-            //   text: 'Sign up',
-            //   size: Size(double.infinity, 54.0),
-            //   onPressed: () {
-            //     final user = User(
-            //       name: _username,
-            //       email: _email,
-            //       password: _password,
-            //     );
-            //     CubitProvider.of<AuthCubit>(context)
-            //         .signup(widget._signUpService, user);
-            //   },
-            // ),
-            SizedBox(height: 30.0),
-            SizedBox(height: 30),
-            RichText(
-              text: TextSpan(
-                text: 'Already have an account?',
-                style: Theme.of(context).textTheme.caption.copyWith(
-                      color: Colors.black,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.normal,
-                    ),
-                children: [
-                  TextSpan(
-                    text: ' Sign in',
-                    style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        _controller.previousPage(
-                            duration: Duration(milliseconds: 1000),
-                            curve: Curves.elasticOut);
-                      },
-                  )
-                ],
+  _signUp() => SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          child: Column(
+            children: [
+              CustomTextField(
+                inputAction: TextInputAction.next,
+                hint: 'Username',
+                fontSize: 18.0,
+                fontWeight: FontWeight.normal,
+                onChanged: (val) {
+                  _username = val;
+                },
               ),
-            )
-          ],
+              SizedBox(height: 30.0),
+              ..._emailAndPassword(),
+              SizedBox(height: 30.0),
+              CustomTextField(
+                obscure: true,
+                inputAction: TextInputAction.done,
+                hint: 'College',
+                fontSize: 18.0,
+                fontWeight: FontWeight.normal,
+                onChanged: (val) {
+                  _college = val;
+                },
+              ),
+              SizedBox(height: 30.0),
+
+              CustomTextField(
+                obscure: true,
+                inputAction: TextInputAction.done,
+                hint: 'Department',
+                fontSize: 18.0,
+                fontWeight: FontWeight.normal,
+                onChanged: (val) {
+                  _department = val;
+                },
+              ),
+              verticalSpaceRegular,
+              CustomFlatButton(
+                text: 'Sign up',
+                onPressed: () {
+                  final user = User(
+                      name: _username,
+                      email: _email,
+                      password: _password,
+                      department: _department,
+                      college: _college);
+                  CubitProvider.of<AuthCubit>(context)
+                      .signup(widget._signupService, user);
+                },
+              ),
+              SizedBox(height: 30.0),
+              // SizedBox(height: 30),
+              RichText(
+                text: TextSpan(
+                  text: 'Already have an account?  ',
+                  style: GoogleFonts.montserrat(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black),
+                  children: [
+                    TextSpan(
+                      text: 'Sign in',
+                      style: GoogleFonts.montserrat(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.green),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          _controller.previousPage(
+                              duration: Duration(milliseconds: 1000),
+                              curve: Curves.elasticOut);
+                        },
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       );
 

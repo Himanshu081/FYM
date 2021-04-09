@@ -3,7 +3,7 @@ import 'package:fym_test_1/models/Project.dart';
 // import 'package:fym_test_1/state_management/Projects/ProjectCubit.dart';
 
 abstract class IHomePageAdapter {
-  void onSearchQuery(BuildContext context, String query);
+  void onSearchQuery(BuildContext context, String query, String filter);
   void onProjectSelected(BuildContext context, Project project);
   void onUserLogout(BuildContext context);
 }
@@ -11,7 +11,7 @@ abstract class IHomePageAdapter {
 class HomePageAdapter implements IHomePageAdapter {
   // ProjectCubit _projectCubit;
   final Widget Function(Project project) onSelection;
-  final Widget Function(String query) onSearch;
+  final Widget Function(String query, String filter) onSearch;
   final Widget Function() onLogout;
 
   HomePageAdapter({
@@ -21,11 +21,11 @@ class HomePageAdapter implements IHomePageAdapter {
   });
 
   @override
-  void onSearchQuery(BuildContext context, String query) {
+  void onSearchQuery(BuildContext context, String query, String filter) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => onSearch(query),
+        builder: (_) => onSearch(query, filter),
       ),
     );
   }

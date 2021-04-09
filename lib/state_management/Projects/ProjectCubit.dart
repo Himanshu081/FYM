@@ -19,9 +19,11 @@ class ProjectCubit extends Cubit<ProjectState> {
         : _setPageData(projectResult);
   }
 
-  search(String query) async {
+  search(String query, String filter) async {
     _startLoading();
-    final searchResults = await _api.findProjects(searchterm: query);
+
+    final searchResults =
+        await _api.findProjects(searchterm: query, filter: filter);
     searchResults == null || searchResults.isEmpty
         ? _showError('No Projects found')
         : _setPageData(searchResults);

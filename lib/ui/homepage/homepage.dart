@@ -3,6 +3,8 @@ import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/auth/src/auth_service_contract.dart';
 // import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/models/Project.dart';
+import 'package:fym_test_1/state_management/Projects/Filterby_state.dart';
+import 'package:fym_test_1/state_management/Projects/FilterbyCubit.dart';
 import 'package:fym_test_1/state_management/Projects/ProjectCubit.dart';
 import 'package:fym_test_1/state_management/Projects/ProjectState.dart';
 import 'package:fym_test_1/state_management/auth/auth_cubit.dart';
@@ -25,13 +27,29 @@ class ProjectListPage extends StatefulWidget {
   _ProjectListPageState createState() => _ProjectListPageState();
 }
 
+// class SortBy {
+//   int id;
+//   String name;
+//   SortBy(this.id, this.name);
+
+//   static List<SortBy> getList() {
+//     return <SortBy>[SortBy(1, "Title"), SortBy(2, "Skills")];
+//   }
+// }
+
 class _ProjectListPageState extends State<ProjectListPage> {
   ProjectsLoaded currentState;
   List<Project> projects = [];
+  // List<SortBy> sortby = SortBy.getList();
+  // List<DropdownMenuItem<SortBy>> _list;
+  // SortBy _selectedFilter;
+  List _listItems = ["Title", "Skills"];
+  String choosenValue = '';
 
   @override
   void initState() {
     CubitProvider.of<ProjectCubit>(context).getAllProjects();
+
     super.initState();
   }
 
@@ -201,7 +219,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
               onChanged: (val) {},
               inputAction: TextInputAction.search,
               onSubmitted: (query) {
-                widget.adapter.onSearchQuery(context, query);
+                widget.adapter.onSearchQuery(context, query, choosenValue);
               },
 
               //  onSubmitted: adapter.onSearchQuery(context, query),
@@ -211,10 +229,44 @@ class _ProjectListPageState extends State<ProjectListPage> {
               child: SvgPicture.asset('assets/background_search.svg'),
             ),
             Positioned(
-              top: 8,
-              right: 9,
-              child: SvgPicture.asset('assets/icon_search_white.svg'),
-            )
+                top: -8,
+                right: -26,
+                child: CubitBuilder<FilterbyCubit, FilterByState>(
+                  builder: (context, state) {
+                    return Container(
+                      child: DropdownButton(
+                        hint: Text(
+                          "Choose \nFilter",
+                          style: TextStyle(
+                              fontSize: 9, fontWeight: FontWeight.bold),
+                        ),
+                        items: _listItems.map((value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          if (value == "Title") {
+                            choosenValue = "Title";
+                            print(choosenValue);
+                            CubitProvider.of<FilterbyCubit>(context)
+                                .toggleFilterByTitle(true);
+                            CubitProvider.of<FilterbyCubit>(context)
+                                .toggleFilterBySkills(false);
+                          } else {
+                            choosenValue = "Skills";
+                            print(choosenValue);
+                            CubitProvider.of<FilterbyCubit>(context)
+                                .toggleFilterBySkills(true);
+                            CubitProvider.of<FilterbyCubit>(context)
+                                .toggleFilterByTitle(false);
+                          }
+                        },
+                      ),
+                    );
+                  },
+                ))
             //     Padding(
             //       padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 50.0),
             //       child: Align(

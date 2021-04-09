@@ -15,6 +15,7 @@ import 'package:fym_test_1/infra/api/auth_api_contract.dart';
 import 'package:fym_test_1/infra/signup_service.dart';
 import 'package:fym_test_1/managers/auth_manager.dart';
 import 'package:fym_test_1/models/Project.dart';
+import 'package:fym_test_1/state_management/Projects/FilterbyCubit.dart';
 import 'package:fym_test_1/state_management/Projects/ProjectCubit.dart';
 import 'package:fym_test_1/state_management/auth/auth_cubit.dart';
 // import 'package:fym_test_1/ui/auth/auth_page.dart';
@@ -57,7 +58,7 @@ class CompositionRoot {
     _secureClient = SecureClient(_iHttp, _localStore);
     print("secure  client creted");
 
-    _baseUrl = "http://192.168.0.7:5000";
+    _baseUrl = "http://192.168.0.6:5000";
     print("heloo from " + _baseUrl);
     manager = AuthManager(_authApi);
     _api = ProjectApi(_secureClient, _baseUrl);
@@ -96,6 +97,7 @@ class CompositionRoot {
         onSelection: _composeRestaurantPageWith,
         onLogout: composeAuthUi);
     AuthCubit _authCubit = AuthCubit(_localStore);
+    FilterbyCubit _filterbycubit = FilterbyCubit();
 
     return MultiCubitProvider(providers: [
       CubitProvider<ProjectCubit>(
@@ -103,7 +105,10 @@ class CompositionRoot {
       ),
       CubitProvider<AuthCubit>(
         create: (BuildContext context) => _authCubit,
-      )
+      ),
+      CubitProvider<FilterbyCubit>(
+        create: (BuildContext context) => _filterbycubit,
+      ),
     ], child: ProjectListPage(adapter, service));
     //   CubitProvider<ProjectCubit>(
     //     create: (BuildContext context) => _restaurantCubit,
@@ -117,11 +122,12 @@ class CompositionRoot {
     // ], child: RestaurantListPage(adapter, service));
   }
 
-  static Widget _composeSearchResultsPageWith(String query) {
+  static Widget _composeSearchResultsPageWith(String query, String filter) {
     ProjectCubit projectCubit = ProjectCubit(_api);
     ISearchResultsPageAdapter searchResultsPageAdapter =
         SearchResultsPageAdapter(onSelection: _composeRestaurantPageWith);
-    return SearchResultsPage(projectCubit, query, searchResultsPageAdapter);
+    return SearchResultsPage(
+        projectCubit, query, filter, searchResultsPageAdapter);
   }
 
   static Widget _composeRestaurantPageWith(Project project) {

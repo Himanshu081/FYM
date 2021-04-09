@@ -8,9 +8,10 @@ import 'package:fym_test_1/ui/homepage/search_results_page_adapters.dart';
 class SearchResultsPage extends StatefulWidget {
   final ProjectCubit projectCubit;
   final String query;
+  final String filter;
   final ISearchResultsPageAdapter adapter;
 
-  SearchResultsPage(this.projectCubit, this.query, this.adapter);
+  SearchResultsPage(this.projectCubit, this.query, this.filter, this.adapter);
   @override
   _SearchResultsPageState createState() => _SearchResultsPageState();
 }
@@ -21,7 +22,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   // bool fetchMore = false;
   @override
   void initState() {
-    widget.projectCubit.search(widget.query);
+    widget.projectCubit.search(widget.query, widget.filter);
     super.initState();
   }
 

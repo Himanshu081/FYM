@@ -13,8 +13,14 @@ class ProjectApi implements IProjectApi {
   ProjectApi(this.httpClient, this.baseurl);
 
   @override
-  Future<List<Project>> findProjects({String searchterm}) async {
-    final endpoint = baseurl + '/project/projects/title?search=$searchterm';
+  Future<List<Project>> findProjects({String searchterm, String filter}) async {
+    String endpoint = '';
+    if (filter == "Title") {
+      endpoint = baseurl + '/project/projects/title?search=$searchterm';
+    } else {
+      endpoint = baseurl + '/project/projects/skills?search=$searchterm';
+    }
+
     final result = await httpClient.get(endpoint);
     return _parseProjecttoJson(result);
   }

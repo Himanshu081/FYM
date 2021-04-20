@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/Projects/project_api.dart';
-import 'package:fym_test_1/Projects/project_api_contract.dart';
+// import 'package:fym_test_1/Projects/project_api_contract.dart';
 import 'package:fym_test_1/Projects/shared_Api_infra/http_client.dart';
 import 'package:fym_test_1/Projects/shared_Api_infra/http_client_contract.dart';
 import 'package:fym_test_1/auth/src/auth_service_contract.dart';
@@ -17,15 +17,19 @@ import 'package:fym_test_1/managers/auth_manager.dart';
 import 'package:fym_test_1/models/Project.dart';
 import 'package:fym_test_1/state_management/Projects/FilterbyCubit.dart';
 import 'package:fym_test_1/state_management/Projects/ProjectCubit.dart';
+import 'package:fym_test_1/state_management/Projects/User_Projects.dart/getuserprojectCubit.dart';
+import 'package:fym_test_1/state_management/Projects/User_Projects.dart/postprojectcubit.dart';
 import 'package:fym_test_1/state_management/auth/auth_cubit.dart';
 // import 'package:fym_test_1/ui/auth/auth_page.dart';
 import 'package:fym_test_1/ui/auth/auth_page_adapters.dart';
 import 'package:fym_test_1/ui/auth/splashscreen.dart';
 import 'package:fym_test_1/ui/homepage/Project_Page.dart';
+import 'package:fym_test_1/ui/homepage/category_search_results.dart';
 import 'package:fym_test_1/ui/homepage/home_page_adapters.dart';
 import 'package:fym_test_1/ui/homepage/homepage.dart';
 import 'package:fym_test_1/ui/homepage/search_result_page.dart';
 import 'package:fym_test_1/ui/homepage/search_results_page_adapters.dart';
+import 'package:fym_test_1/ui/homepage/userProjectsScreen.dart';
 import 'infra/api/auth_api_contract.dart';
 import 'infra/api/auth_api.dart';
 import 'auth/src/signup_service.dart';
@@ -48,18 +52,18 @@ class CompositionRoot {
 
   static configure() async {
     _sharedPreferences = await SharedPreferences.getInstance();
-    print(_sharedPreferences.toString());
+    // print(_sharedPreferences.toString());
     _localStore = LocalStore(_sharedPreferences);
     _authApi = AuthApi(_baseUrl, _client);
 
     _client = http.Client();
     _iHttp = HttpClientImpl(_client);
-    print("ihttp client creted");
+    // print("ihttp client creted");
     _secureClient = SecureClient(_iHttp, _localStore);
-    print("secure  client creted");
+    // print("secure  client creted");
 
-    _baseUrl = "http://192.168.0.6:5000";
-    print("heloo from " + _baseUrl);
+    _baseUrl = "http://192.168.0.7:5000";
+    // print("heloo from " + _baseUrl);
     manager = AuthManager(_authApi);
     _api = ProjectApi(_secureClient, _baseUrl);
     sut = AuthApi(_baseUrl, _client);
@@ -90,12 +94,17 @@ class CompositionRoot {
   static Widget composeHomeUi(IAuthService service) {
     // IProjectApi _api = ProjectApi(_iHttp, _baseUrl);
     ProjectCubit _projectCubit = ProjectCubit(_api);
+    UserProjectCubit userProjectCubit = UserProjectCubit(_api, _localStore);
+    UserProjectPostCubit userProjectPostCubit = UserProjectPostCubit(_api);
     // ProjectCubit _restaurantCubit =
     //     ProjectCubit(_api, defaultPageSize: 20);
     IHomePageAdapter adapter = HomePageAdapter(
-        onSearch: _composeSearchResultsPageWith,
-        onSelection: _composeRestaurantPageWith,
-        onLogout: composeAuthUi);
+      onSearch: _composeSearchResultsPageWith,
+      onSelection: _composeRestaurantPageWith,
+      onLogout: composeAuthUi,
+      onParticularCategoryProject: _composeCategoryWisepage,
+    );
+
     AuthCubit _authCubit = AuthCubit(_localStore);
     FilterbyCubit _filterbycubit = FilterbyCubit();
 
@@ -103,23 +112,19 @@ class CompositionRoot {
       CubitProvider<ProjectCubit>(
         create: (BuildContext context) => _projectCubit,
       ),
+      CubitProvider<UserProjectCubit>(
+        create: (BuildContext context) => userProjectCubit,
+      ),
       CubitProvider<AuthCubit>(
         create: (BuildContext context) => _authCubit,
       ),
       CubitProvider<FilterbyCubit>(
         create: (BuildContext context) => _filterbycubit,
       ),
+      CubitProvider<UserProjectPostCubit>(
+        create: (BuildContext context) => userProjectPostCubit,
+      ),
     ], child: ProjectListPage(adapter, service));
-    //   CubitProvider<ProjectCubit>(
-    //     create: (BuildContext context) => _restaurantCubit,
-    //   ),
-    //   CubitProvider<HeaderCubit>(
-    //     create: (BuildContext context) => HeaderCubit(),
-    //   ),
-    //   CubitProvider<AuthCubit>(
-    //     create: (BuildContext context) => _authCubit,
-    //   )
-    // ], child: RestaurantListPage(adapter, service));
   }
 
   static Widget _composeSearchResultsPageWith(String query, String filter) {
@@ -131,7 +136,30 @@ class CompositionRoot {
   }
 
   static Widget _composeRestaurantPageWith(Project project) {
-    ProjectCubit projectCubit = ProjectCubit(_api);
-    return ProjectPage(project, projectCubit);
+    // ProjectCubit projectCubit = ProjectCubit(_api);
+    return ProjectPage(project);
   }
+
+  static Widget _composeCategoryWisepage(String category) {
+    ProjectCubit projectCubit = ProjectCubit(_api);
+    ISearchResultsPageAdapter searchResultsPageAdapter =
+        SearchResultsPageAdapter(onSelection: _composeRestaurantPageWith);
+    return CategorySearchResult(
+        projectCubit, category, searchResultsPageAdapter);
+  }
+
+  // static Widget composeUserProject() {
+  //   UserProjectCubit userProjectCubit = UserProjectCubit(_api, _localStore);
+  //   //  IHomePageAdapter adapter = HomePageAdapter(
+  //   //     onSearch: _composeSearchResultsPageWith,
+  //   //     onSelection: _composeRestaurantPageWith,
+  //   //     onLogout: composeAuthUi,
+  //   //     onAddProj: composeUserProject);
+  //   return UserProjectsScreen(userProjectCubit);
+  // }
+
+  // static Widget _composeRestaurantPageWith(Project project){
+  //   ProjectCubit projectCubit = ProjectCubit(_api);
+  //   return ProjectPage(project, projectCubit);
+  // }
 }

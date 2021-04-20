@@ -9,10 +9,10 @@ class ProjectCubit extends Cubit<ProjectState> {
   ProjectCubit(this._api) : super(Initial());
 
   getAllProjects() async {
-    print("Get all Projects called inside project cubit ");
+    // print("Get all Projects called inside project cubit ");
     _startLoading();
     final projectResult = await _api.getAllProjects();
-    print("Projects received in project cubit " + projectResult.toString());
+    // print("Projects received in project cubit " + projectResult.toString());
 
     projectResult == null || projectResult.isEmpty
         ? _showError('No projects found')
@@ -24,6 +24,15 @@ class ProjectCubit extends Cubit<ProjectState> {
 
     final searchResults =
         await _api.findProjects(searchterm: query, filter: filter);
+    searchResults == null || searchResults.isEmpty
+        ? _showError('No Projects found')
+        : _setPageData(searchResults);
+  }
+
+  searchCategorywise(String category) async {
+    _startLoading();
+
+    final searchResults = await _api.searchCategoryWise(category);
     searchResults == null || searchResults.isEmpty
         ? _showError('No Projects found')
         : _setPageData(searchResults);

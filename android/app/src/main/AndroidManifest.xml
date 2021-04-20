@@ -10,7 +10,7 @@
  
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="fym_test_1"
+        android:label="FYM"
         android:icon="@mipmap/ic_launcher">
   
         <activity

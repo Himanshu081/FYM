@@ -8,10 +8,10 @@ class HttpClientImpl implements IHttpClient {
 
   @override
   Future<HttpResult> get(url, {Map<String, String> headers}) async {
-    print("url inside http_client.dart" + url);
-    print("Headers inside http_client.dart ::" + headers.toString());
+    // print("url inside http_client.dart" + url);
+    // print("Headers inside http_client.dart ::" + headers.toString());
     final response = await _client.get(url, headers: headers);
-    print("Response received from secure client :: " + response.body);
+    // print("Response received from secure client :: " + response.body);
     return HttpResult(response.body, _setStatus(response));
   }
 

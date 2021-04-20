@@ -5,7 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'local_store_contract.dart';
 
 const CACHED_TOKEN = 'CACHED_TOKEN';
-// const CACHED_AUTH = 'CACHED_AUTH';
+const CACHED_EMAIL = 'CACHED_EMAIL';
+const CACHED_NAME = 'CACHED_NAME';
 
 class LocalStore implements ILocalStore {
   final SharedPreferences sharedPreferences;
@@ -18,10 +19,36 @@ class LocalStore implements ILocalStore {
   }
 
   @override
+  deleteName(UserName name) {
+    sharedPreferences.remove(CACHED_NAME);
+  }
+
+  @override
+  deleteEmail(Email email) {
+    sharedPreferences.remove(CACHED_EMAIL);
+  }
+
+  @override
   Future<Token> fetch() {
     final tokenStr = sharedPreferences.getString(CACHED_TOKEN);
     if (tokenStr != null) return Future.value(Token(tokenStr));
+    return null;
+  }
 
+  @override
+  Future<Email> fetchEmail() {
+    print("Fetch email called");
+    final tokenStr = sharedPreferences.getString(CACHED_EMAIL);
+    print("Fetched email is:" + tokenStr);
+
+    if (tokenStr != null) return Future.value(Email(tokenStr));
+    return null;
+  }
+
+  @override
+  Future<UserName> fetchName() {
+    final tokenStr = sharedPreferences.getString(CACHED_NAME);
+    if (tokenStr != null) return Future.value(UserName(tokenStr));
     return null;
   }
 
@@ -43,8 +70,14 @@ class LocalStore implements ILocalStore {
   //   return null;
   // }
 
-//   @override
-//   Future saveAuthType(AuthType type) {
-//     return sharedPreferences.setString(CACHED_AUTH, type.toString());
-//   }
+  @override
+  Future saveEmail(Email email) {
+    print("save email called,value of email received" + email.email);
+    return sharedPreferences.setString(CACHED_EMAIL, email.email);
+  }
+
+  @override
+  Future saveName(UserName name) {
+    return sharedPreferences.setString(CACHED_NAME, name.name);
+  }
 }

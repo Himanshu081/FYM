@@ -7,8 +7,11 @@ import 'package:fym_test_1/state_management/Projects/Filterby_state.dart';
 import 'package:fym_test_1/state_management/Projects/FilterbyCubit.dart';
 import 'package:fym_test_1/state_management/Projects/ProjectCubit.dart';
 import 'package:fym_test_1/state_management/Projects/ProjectState.dart';
+import 'package:fym_test_1/state_management/Projects/User_Projects.dart/getuserprojectCubit.dart';
+import 'package:fym_test_1/state_management/Projects/User_Projects.dart/postprojectcubit.dart';
 import 'package:fym_test_1/state_management/auth/auth_cubit.dart';
 import 'package:fym_test_1/ui/homepage/home_page_adapters.dart';
+import 'package:fym_test_1/ui/homepage/userProjectsScreen.dart';
 import 'package:fym_test_1/widgets/custom_text_field.dart';
 import 'package:fym_test_1/state_management/auth/auth_state.dart' as authState;
 // import 'package:fym_test_1/ui/homepage/ProjectListPage.dart';
@@ -56,23 +59,114 @@ class _ProjectListPageState extends State<ProjectListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: IconButton(
-              icon: Icon(
-                Icons.power_settings_new_rounded,
-                size: 26.0,
-                color: Colors.black,
+      endDrawer: Drawer(
+          elevation: 20.0,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountName: Text('Himanshu Yadav'),
+                accountEmail: Text('developine.com@gmail.com'),
+                currentAccountPicture: null,
+                decoration: BoxDecoration(color: Colors.blueAccent),
               ),
-              onPressed: () {
-                _logout();
-              },
+              ListTile(
+                leading: Icon(Icons.business_center_outlined),
+                title: Text('About Us'),
+                onTap: () {
+                  // This line code will close drawer programatically....
+                  Navigator.pop(context);
+                },
+              ),
+              Divider(
+                height: 2.0,
+              ),
+              ListTile(
+                leading: SizedBox(
+                    height: 30,
+                    width: 20, // fixed width and height
+                    child: Image.asset(
+                      'assets/whatsapp.png',
+                      color: Color(0xff808080),
+                    )),
+                title: Text('Join us on Whatsapp'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              Divider(
+                height: 2.0,
+              ),
+              ListTile(
+                leading: Icon(Icons.error),
+                title: Text('Report Issue'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.exit_to_app,
+                  color: Colors.red,
+                ),
+                title: Text('Logout'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          )),
+      appBar: AppBar(
+        // leading: IconButton(
+        //   icon: Icon(Icons.accessible),
+        //   onPressed: () => Scaffold.of(context).openDrawer(),
+        // ),
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(color: Colors.black),
+        elevation: 0,
+        title: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+              text: 'FINDYOUR\n',
+              children: <TextSpan>[
+                TextSpan(
+                    text: 'TEAMMATES',
+                    style: GoogleFonts.montserrat(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 18,
+                        color: Colors.green))
+              ],
+              style: GoogleFonts.oxygen(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: Colors.black)),
+        ),
+        centerTitle: true,
+        actions: [
+          Builder(
+            builder: (context) => IconButton(
+              icon: new Image.asset(
+                "assets/vector-1.png",
+                width: 35,
+                height: 35,
+              ),
+              onPressed: () => Scaffold.of(context).openEndDrawer(),
+              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             ),
-          )
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(right: 16),
+          //   child: IconButton(
+          //     icon: Icon(
+          //       Icons.power_settings_new_rounded,
+          //       size: 26.0,
+          //       color: Colors.black,
+          //     ),
+          //     onPressed: () {
+          //       _logout();
+          //     },
+          //   ),
+          // )
         ],
       ),
       extendBodyBehindAppBar: true,
@@ -86,27 +180,30 @@ class _ProjectListPageState extends State<ProjectListPage> {
                   padding: EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Text(" Hi !",
-                              style: GoogleFonts.openSans(
-                                fontSize: 16,
-                              )),
-                          horizontalSpaceSmall,
-                          Image.asset(
-                            'assets/waving-hand.png',
-                            width: 25,
-                            height: 30,
-                          )
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     Text(" Hi !",
+                      //         style: GoogleFonts.openSans(
+                      //           fontSize: 16,
+                      //         )),
+                      //     horizontalSpaceSmall,
+                      //     Image.asset(
+                      //       'assets/wavehand.gif',
+                      //       width: 25,
+                      //       height: 30,
+                      //     )
+                      //   ],
+                      // ),
                       verticalSpaceSmall,
                       Align(
                         alignment: Alignment.topLeft,
-                        child: Text(
-                          "Discover Latest Projects",
-                          style: GoogleFonts.openSans(
-                              fontSize: 22, fontWeight: FontWeight.w600),
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 15, left: 10),
+                          child: Text(
+                            "Ready to work\ntoday?",
+                            style: GoogleFonts.oxygen(
+                                fontSize: 27, fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
                     ],
@@ -116,11 +213,41 @@ class _ProjectListPageState extends State<ProjectListPage> {
                   child: _header(),
                   // alignment: Alignment.topCenter,
                 ),
+                verticalSpaceRegular,
+                verticalSpaceTiny,
+                Container(
+                  width: double.infinity,
+                  height: 100,
+                  margin: EdgeInsets.only(left: 10),
+                  // decoration:
+                  // BoxDecoration(border: Border.all(color: Colors.black)),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 10, top: 15),
+                        child: Text(
+                          "User Corner",
+                          style: GoogleFonts.oxygen(
+                              fontSize: 20, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      userCorner(),
+                    ],
+                  ),
+                ),
+                verticalSpaceSmall,
                 Container(
                   child: CubitConsumer<ProjectCubit, ProjectState>(
                       builder: (_, state) {
                     if (state is ProjectsLoaded) {
                       currentState = state;
+                      if (projects.length != 0) {
+                        projects.clear();
+                        projects.addAll(state.projects);
+                      }
+                      projects.clear();
                       projects.addAll(state.projects);
                       // _updateHeader();
                     }
@@ -229,16 +356,20 @@ class _ProjectListPageState extends State<ProjectListPage> {
               child: SvgPicture.asset('assets/background_search.svg'),
             ),
             Positioned(
-                top: -8,
+                top: -5,
                 right: -26,
                 child: CubitBuilder<FilterbyCubit, FilterByState>(
                   builder: (context, state) {
                     return Container(
                       child: DropdownButton(
-                        hint: Text(
-                          "Choose \nFilter",
-                          style: TextStyle(
-                              fontSize: 9, fontWeight: FontWeight.bold),
+                        hint: IconButton(
+                          iconSize: 8,
+                          icon: Image.asset(
+                            'assets/filter.png',
+                            color: Colors.white,
+                            width: 23,
+                          ),
+                          onPressed: () {},
                         ),
                         items: _listItems.map((value) {
                           return DropdownMenuItem(
@@ -282,6 +413,226 @@ class _ProjectListPageState extends State<ProjectListPage> {
           ],
         ),
       );
+
+  Widget mycategory() {
+    return Container(
+      height: 300,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: kPrimaryColor.withOpacity(0.03),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(50),
+          bottomRight: Radius.circular(50),
+        ),
+      ),
+      child: Wrap(
+        runSpacing: 20,
+        spacing: 20,
+        children: [
+          InfoCard(
+              title: "Android",
+              imagePath: "assets/android.png",
+              adapter: widget.adapter),
+          InfoCard(
+              title: "Web Development",
+              imagePath: "assets/web.png",
+              adapter: widget.adapter),
+          InfoCard(
+              title: "Designing",
+              imagePath: "assets/design.png",
+              adapter: widget.adapter),
+          InfoCard(
+              title: "Marketing",
+              imagePath: "assets/marketing.png",
+              adapter: widget.adapter),
+        ],
+      ),
+    );
+  }
+
+  Widget userCorner() {
+    return Container(
+      margin: EdgeInsets.only(top: 5),
+      width: double.infinity,
+      height: 55,
+      // decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+      child: ListView(scrollDirection: Axis.horizontal, children: [
+        Row(
+          children: [
+            ActionChip(
+              elevation: 8.0,
+              padding: EdgeInsets.all(2.0),
+              avatar: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.list_alt_rounded,
+                  color: Colors.blue,
+                  size: 20,
+                ),
+              ),
+              label: Text(
+                'Your Projects',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+              onPressed: () {
+                goToUserProjectPage(context);
+              },
+              backgroundColor: Colors.white,
+              shape: StadiumBorder(
+                  side: BorderSide(
+                width: 1,
+                color: Colors.white,
+              )),
+            ),
+            horizontalSpaceRegular,
+            ActionChip(
+              elevation: 8.0,
+              padding: EdgeInsets.all(2.0),
+              avatar: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.account_box_outlined,
+                  color: Colors.blue,
+                  size: 20,
+                ),
+              ),
+              label: Text(
+                'Your Profile',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+              onPressed: () {},
+              backgroundColor: Colors.white,
+              shape: StadiumBorder(
+                  side: BorderSide(
+                width: 1,
+                color: Colors.white,
+              )),
+            ),
+            horizontalSpaceRegular,
+            ActionChip(
+              elevation: 8.0,
+              padding: EdgeInsets.all(2.0),
+              avatar: CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.error_outline,
+                  color: Colors.blue,
+                  size: 20,
+                ),
+              ),
+              label: Text(
+                'Report Issue',
+                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+              ),
+              onPressed: () {},
+              backgroundColor: Colors.white,
+              shape: StadiumBorder(
+                  side: BorderSide(
+                width: 1,
+                color: Colors.white,
+              )),
+            )
+          ],
+        ),
+      ]),
+    );
+    // return Expanded(
+    //     child: Padding(
+    //   padding: EdgeInsets.all(10.0),
+    //   child: Wrap(
+    //     // direction: Axis.vertical,
+    //     crossAxisAlignment: WrapCrossAlignment.center,
+    //     spacing: 12,
+    //     runSpacing: 8,
+    //     runAlignment: WrapAlignment.center,
+    //     // alignment: WrapAlignment.start,
+    //     children: [
+    //       //   Container(
+    //       //     // margin: EdgeInsets.symmetric(horizontal: 9, vertical: 16),
+    //       //     // padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    //       //     decoration: BoxDecoration(
+    //       //         color: Colors.blue, borderRadius: BorderRadius.circular(13)),
+    //       //     child: InkWell(
+    //       //       onTap: () {
+    //       //         print("Add project clicked");
+    //       //       },
+    //       //       child: Padding(
+    //       //         padding:
+    //       //             const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+    //       //         child: Text(
+    //       //           "Add Project  +",
+    //       //           style: TextStyle(color: Colors.white),
+    //       //         ),
+    //       //       ),
+    //       //     ),
+    //       //   ),
+
+    //       Container(
+    //         // margin: EdgeInsets.symmetric(horizontal: 9, vertical: 16),
+    //         // padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    //         decoration: BoxDecoration(
+    //           color: Colors.white,
+    //           borderRadius: BorderRadius.circular(15),
+    //           boxShadow: [
+    //             BoxShadow(
+    //               color: Colors.grey,
+    //               offset: Offset(0.0, 1.0), //(x,y)
+    //               blurRadius: 6.0,
+    //             ),
+    //           ],
+    //         ),
+    //         child: InkWell(
+    //           onTap: () {
+    //             print("Your project clicked");
+    //             // widget.adapter.onViewUserProject(context);
+    //             goToUserProjectPage(context);
+    //           },
+    //           child: Row(
+    //             children: [
+    //               SizedBox(
+    //                 width: 50,
+    //                 height: 50,
+    //                 child: Icon(Icons.ac_unit),
+    //               ),
+    //               Padding(
+    //                 padding:
+    //                     const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+    //                 child: Text(
+    //                   "Your Projects",
+    //                   style: TextStyle(
+    //                       color: Colors.black, fontWeight: FontWeight.w400),
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //         ),
+    //       ),
+    //       Container(
+    //         // margin: EdgeInsets.symmetric(horizontal: 9, vertical: 16),
+    //         // padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+    //         decoration: BoxDecoration(
+    //             color: Colors.blue, borderRadius: BorderRadius.circular(13)),
+    //         child: InkWell(
+    //           onTap: () {
+    //             print("Your proFILE clicked");
+    //           },
+    //           child: Padding(
+    //             padding:
+    //                 const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
+    //             child: Text(
+    //               "Your Profile",
+    //               style: TextStyle(color: Colors.white),
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // )
+
+    // );
+  }
+
   Widget contentCategory() {
     return Container(
       height: 100,
@@ -437,30 +788,58 @@ class _ProjectListPageState extends State<ProjectListPage> {
         children: [
           verticalSpaceMedium,
           Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: Text(
-              'Top Categories',
-              style: GoogleFonts.openSans(
-                  fontSize: 23,
-                  fontWeight: FontWeight.bold,
-                  color: kBlackColor),
+            padding: EdgeInsets.only(left: 18),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Top Categories',
+                  style: GoogleFonts.oxygen(
+                      fontSize: 21,
+                      fontWeight: FontWeight.w600,
+                      color: kBlackColor),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  margin: EdgeInsets.only(right: 14),
+                  child: Image.asset(
+                    'assets/hashtag.png',
+                    width: 25,
+                    height: 30,
+                  ),
+                ),
+              ],
             ),
           ),
           verticalSpaceMedium,
-          contentCategory(),
+          mycategory(),
 
-          Padding(
-            padding: EdgeInsets.only(left: 14, top: 25),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Popular',
-                style: GoogleFonts.openSans(
-                    fontSize: 23,
-                    fontWeight: FontWeight.bold,
-                    color: kBlackColor),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 14, top: 25),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    'Recently Added',
+                    style: GoogleFonts.openSans(
+                        fontSize: 23,
+                        fontWeight: FontWeight.w600,
+                        color: kBlackColor),
+                  ),
+                ),
               ),
-            ),
+              Container(
+                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.only(right: 14, top: 20),
+                child: Image.asset(
+                  'assets/wall-clock.png',
+                  width: 25,
+                  height: 30,
+                ),
+              ),
+            ],
           ),
 
           ListView.builder(
@@ -552,5 +931,135 @@ class _ProjectListPageState extends State<ProjectListPage> {
         ],
       ),
     );
+  }
+}
+
+void goToUserProjectPage(context) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+    return MultiCubitProvider(
+      providers: [
+        CubitProvider.value(
+          value: CubitProvider.of<UserProjectCubit>(context),
+        ),
+        CubitProvider.value(
+          value: CubitProvider.of<UserProjectPostCubit>(context),
+        ),
+      ],
+      child: UserProjectsScreen(),
+      // child: CubitProvider.value(
+      // value: CubitProvider.of<UserProjectCubit>(context),
+      // child: UserProjectsScreen()
+
+      // ),
+    );
+  }));
+  //   // MaterialPageRoute(builder: (_) => HomePage()),
+  //   );
+}
+
+class InfoCard extends StatelessWidget {
+  final String title;
+  final String imagePath;
+  final IHomePageAdapter adapter;
+  // final Image PaimagePath,;
+  String choosenValue = "Title";
+
+  InfoCard({Key key, this.title, this.imagePath, this.adapter})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      return InkWell(
+        onTap: () {
+          if (title == "Android") {
+            print("ANDROID CLICKED");
+            String query = "Android";
+            adapter.onViewCategoryProject(context, query);
+          }
+          if (title == "Web Development") {
+            print("web CLICKED");
+            String query = "Web Development";
+            adapter.onViewCategoryProject(context, query);
+          }
+          if (title == "Designing") {
+            String query = "Designing";
+            print("design CLICKED");
+            adapter.onViewCategoryProject(context, query);
+          }
+          if (title == "Marketing") {
+            String query = "Marketing";
+            print("marketing CLICKED");
+            adapter.onViewCategoryProject(context, query);
+          }
+        },
+        child: Container(
+            width: constraints.maxWidth / 2 - 10,
+            height: 130,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(8)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    // border: Border.all(color: Color(0xffD8D9E4)
+                    // )
+                  ),
+                  child: Image.asset(
+                    imagePath,
+                    width: 45,
+                    alignment: Alignment.center,
+                  ),
+                ),
+                verticalSpaceSmall,
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Color(0xff3A4276),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            )
+
+            //  Container(
+            // margin: EdgeInsets.only(right: 10),
+            // padding: EdgeInsets.all(16),
+            // width: 120,
+            // decoration: BoxDecoration(
+            //     borderRadius: BorderRadius.circular(10),
+            //     color: Color(0xffF1F3F6)),
+            // child: Column(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: <Widget>[
+            //     Container(
+            //       decoration: BoxDecoration(
+            //           shape: BoxShape.circle,
+            //           border: Border.all(color: Color(0xffD8D9E4))),
+            //       child: Image.asset(
+            //         "assets/android.png",
+            //         width: 36,
+            //       ),
+            //     ),
+            //     Text(
+            //       "Android",
+            //       style: GoogleFonts.poppins(
+            //         fontSize: 12,
+            //         color: Color(0xff3A4276),
+            //         fontWeight: FontWeight.w500,
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // ),
+            ),
+      );
+    });
   }
 }

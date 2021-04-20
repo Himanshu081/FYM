@@ -13,6 +13,13 @@ const kTwentyBlueColor = Color(0x201E1E99);
 const kPinkColor = Color(0xFFFF70A3);
 const kTenBlackColor = Color(0x10000000);
 
+const kTextColor = Color(0xFF1E2432);
+const kTextMediumColor = Color(0xFF53627C);
+const kTextLightColor = Color(0xFFACB1C0);
+const kPrimaryColor = Color(0xFF0D8E53);
+const kddBackgroundColor = Color(0xFFFCFCFC);
+const kInactiveChartColor = Color(0xFFEAECEF);
+
 const TextStyle ktsMediumBodyText =
     TextStyle(color: kcmedium, fontSize: kBodyTextSize);
 
@@ -39,3 +46,26 @@ screenWidthPercentage(BuildContext context, {double percentage = 1}) =>
     screenHeight(context) * percentage;
 screenHeightPercentage(BuildContext context, {double percentage = 1}) =>
     screenWidth(context) * percentage;
+
+const kHeadingextStyle = TextStyle(
+  fontSize: 28,
+  color: kTextColor,
+  fontWeight: FontWeight.bold,
+);
+const kSubheadingextStyle = TextStyle(
+  fontSize: 24,
+  color: Color(0xFF61688B),
+  height: 2,
+);
+
+const kTitleTextStyle = TextStyle(
+  fontSize: 20,
+  color: kTextColor,
+  fontWeight: FontWeight.bold,
+);
+
+const kSubtitleTextStyle = TextStyle(
+  fontSize: 18,
+  color: kTextColor,
+  // fontWeight: FontWeight.bold,
+);

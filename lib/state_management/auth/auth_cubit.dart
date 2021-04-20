@@ -14,15 +14,15 @@ class AuthCubit extends Cubit<AuthState> {
   AuthCubit(this.localStore) : super(InitialState());
 
   signin(IAuthService authService) async {
-    print("service passed in auth cubit is :" + authService.toString());
-    print("Inside Auth Cubit !!!");
+    // print("service passed in auth cubit is :" + authService.toString());
+    // print("Inside Auth Cubit !!!");
     _startLoading();
 
     final result = await authService.signin();
     // localStore.saveAuthType(type);
     // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    print(
-        "token received from api response result" + result.asValue.toString());
+    // print(
+    //     "token received from api response result" + result.asValue.toString());
 
     _setResultOfAuthState(result);
   }
@@ -49,15 +49,16 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void _setResultOfAuthState(Result<Token> result) {
-    print("Set Result of Auth State called");
+    // print("Set Result of Auth State called");
     if (result.asError != null) {
-      print("Error state called");
+      // print("Error state called");
       emit(ErrorState(result.asError.error));
     } else {
-      print("going to localstore.dart to store token");
+      // print("going to localstore.dart to store token");
 
       localStore.save(result.asValue.value);
-      print("TOken saved success state called");
+
+      // print("TOken saved success state called");
       emit(AuthSuccessState(result.asValue.value));
     }
   }

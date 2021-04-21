@@ -1,5 +1,8 @@
 abstract class IHttpClient {
   Future<HttpResult> get(String url, {Map<String, String> headers});
+  Future<HttpResult> delete(String url, {Map<String, String> headers});
+  Future<HttpResult> put(String url, String body,
+      {Map<String, String> headers});
   Future<HttpResult> post(String url, String body,
       {Map<String, String> headers});
 }

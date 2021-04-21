@@ -33,6 +33,21 @@ class UserProjectPostCubit extends Cubit<PostUserProjects> {
         : _setPageData();
   }
 
+  editUserProject(PostProject project, String id) async {
+    print("add user Project called inside get project cubit ");
+    print("project details received inside postprojectcubit.dart ::" +
+        project.toString());
+    _startLoading();
+    // final email = await store.fetchEmail();
+    // print("value of email fetched is" + email.email);
+    final addprojectResult = await _api.editUserProject(id, project);
+    // print("Projects received in project cubit " + projectResult.toString());
+
+    addprojectResult == null || addprojectResult.isEmpty
+        ? _showError('Some Error occured,Please try again..')
+        : _setPageData();
+  }
+
   _startLoading() {
     emit(PostUserProjectLoading());
   }

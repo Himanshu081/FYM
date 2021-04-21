@@ -89,6 +89,36 @@ class ProjectApi implements IProjectApi {
     // return _parsePostProjecttoJson(result);
   }
 
+  @override
+  Future<String> editUserProject(String id, PostProject project) async {
+    print("Edit the  user projects of project_api.dart caleed");
+    print(
+        "project details received inside edit userproject of project _api.dart::" +
+            project.toString());
+
+    final endpoint = baseurl + '/project/updateproject/$id';
+    final body = jsonEncode({
+      "title": project.title,
+      "author": project.author,
+      "author_email": project.authorEmail,
+      "domain": project.domain,
+      "members_req": project.membersReq,
+      "skills": project.skills,
+      "description": project.description,
+      "excel_sheet_link": project.excelSl,
+      "wp_grp_link": project.wpl
+    });
+    print(endpoint + body.toString());
+    final result = await httpClient.put(endpoint, body);
+    print(result.data + result.status.toString());
+    if (result.status == Status.failure) return null;
+    final json = jsonDecode(result.data);
+    print(json['msg']);
+    return json['msg'];
+
+    // return _parsePostProjecttoJson(result);
+  }
+
   // _parsePostProjecttoJson()
   @override
   Future<Project> getProject({String id}) async {

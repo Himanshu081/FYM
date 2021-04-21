@@ -100,7 +100,7 @@ class _UserProjectsScreenState extends State<UserProjectsScreen> {
                     ),
                   )
                 : Center(
-                    child: Text("No Projects Found. Add Now !"),
+                    child: Text("No Projects Found. Add Now ! "),
                   );
           }
           return Center(

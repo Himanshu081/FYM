@@ -180,20 +180,6 @@ class _ProjectListPageState extends State<ProjectListPage> {
                   padding: EdgeInsets.all(10),
                   child: Column(
                     children: [
-                      // Row(
-                      //   children: [
-                      //     Text(" Hi !",
-                      //         style: GoogleFonts.openSans(
-                      //           fontSize: 16,
-                      //         )),
-                      //     horizontalSpaceSmall,
-                      //     Image.asset(
-                      //       'assets/wavehand.gif',
-                      //       width: 25,
-                      //       height: 30,
-                      //     )
-                      //   ],
-                      // ),
                       verticalSpaceSmall,
                       Align(
                         alignment: Alignment.topLeft,
@@ -435,15 +421,15 @@ class _ProjectListPageState extends State<ProjectListPage> {
               adapter: widget.adapter),
           InfoCard(
               title: "Web Development",
-              imagePath: "assets/web.png",
+              imagePath: "assets/coding.png",
               adapter: widget.adapter),
           InfoCard(
               title: "Designing",
-              imagePath: "assets/design.png",
+              imagePath: "assets/ds.png",
               adapter: widget.adapter),
           InfoCard(
               title: "Marketing",
-              imagePath: "assets/marketing.png",
+              imagePath: "assets/dm.png",
               adapter: widget.adapter),
         ],
       ),
@@ -480,7 +466,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
               backgroundColor: Colors.white,
               shape: StadiumBorder(
                   side: BorderSide(
-                width: 1,
+                width: 0.5,
                 color: Colors.white,
               )),
             ),
@@ -536,101 +522,6 @@ class _ProjectListPageState extends State<ProjectListPage> {
         ),
       ]),
     );
-    // return Expanded(
-    //     child: Padding(
-    //   padding: EdgeInsets.all(10.0),
-    //   child: Wrap(
-    //     // direction: Axis.vertical,
-    //     crossAxisAlignment: WrapCrossAlignment.center,
-    //     spacing: 12,
-    //     runSpacing: 8,
-    //     runAlignment: WrapAlignment.center,
-    //     // alignment: WrapAlignment.start,
-    //     children: [
-    //       //   Container(
-    //       //     // margin: EdgeInsets.symmetric(horizontal: 9, vertical: 16),
-    //       //     // padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    //       //     decoration: BoxDecoration(
-    //       //         color: Colors.blue, borderRadius: BorderRadius.circular(13)),
-    //       //     child: InkWell(
-    //       //       onTap: () {
-    //       //         print("Add project clicked");
-    //       //       },
-    //       //       child: Padding(
-    //       //         padding:
-    //       //             const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-    //       //         child: Text(
-    //       //           "Add Project  +",
-    //       //           style: TextStyle(color: Colors.white),
-    //       //         ),
-    //       //       ),
-    //       //     ),
-    //       //   ),
-
-    //       Container(
-    //         // margin: EdgeInsets.symmetric(horizontal: 9, vertical: 16),
-    //         // padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    //         decoration: BoxDecoration(
-    //           color: Colors.white,
-    //           borderRadius: BorderRadius.circular(15),
-    //           boxShadow: [
-    //             BoxShadow(
-    //               color: Colors.grey,
-    //               offset: Offset(0.0, 1.0), //(x,y)
-    //               blurRadius: 6.0,
-    //             ),
-    //           ],
-    //         ),
-    //         child: InkWell(
-    //           onTap: () {
-    //             print("Your project clicked");
-    //             // widget.adapter.onViewUserProject(context);
-    //             goToUserProjectPage(context);
-    //           },
-    //           child: Row(
-    //             children: [
-    //               SizedBox(
-    //                 width: 50,
-    //                 height: 50,
-    //                 child: Icon(Icons.ac_unit),
-    //               ),
-    //               Padding(
-    //                 padding:
-    //                     const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-    //                 child: Text(
-    //                   "Your Projects",
-    //                   style: TextStyle(
-    //                       color: Colors.black, fontWeight: FontWeight.w400),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //       Container(
-    //         // margin: EdgeInsets.symmetric(horizontal: 9, vertical: 16),
-    //         // padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    //         decoration: BoxDecoration(
-    //             color: Colors.blue, borderRadius: BorderRadius.circular(13)),
-    //         child: InkWell(
-    //           onTap: () {
-    //             print("Your proFILE clicked");
-    //           },
-    //           child: Padding(
-    //             padding:
-    //                 const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
-    //             child: Text(
-    //               "Your Profile",
-    //               style: TextStyle(color: Colors.white),
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // )
-
-    // );
   }
 
   Widget contentCategory() {

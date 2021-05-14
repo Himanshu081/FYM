@@ -1,19 +1,19 @@
-import 'package:delayed_display/delayed_display.dart';
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/models/PostProject.dart';
+import 'package:fym_test_1/models/Project.dart';
 import 'package:fym_test_1/state_management/Projects/User_Projects.dart/postcubit_state.dart';
 import 'package:fym_test_1/state_management/Projects/User_Projects.dart/postprojectcubit.dart';
 import 'package:fym_test_1/widgets/styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AddScreen extends StatelessWidget {
+class EditScreen extends StatelessWidget {
   final String username;
   final String email;
+  final Project project;
 
-  AddScreen(this.username, this.email);
+  EditScreen(this.username, this.email, this.project);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,39 +43,14 @@ class AddScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Center(
-                    child: Container(
-                      child: FlareActor(
-                        "assets/tick.flr",
-                        animation: "done",
-                      ),
-                      width: 300,
-                      height: 300,
-                    ),
-                  ),
-                  DelayedDisplay(
-                    child: Text(
-                      "Project Added Successfully !",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 18,
-                        color: Colors.green,
-                      ),
-                    ),
-                  ),
-                  verticalSpaceSmall,
-                  DelayedDisplay(
-                    delay: Duration(seconds: 1, milliseconds: 200),
-                    child: FlatButton(
-                        onPressed: () {
-                          Navigator.pop(context, 'success');
-                          CubitProvider.of<UserProjectPostCubit>(context)
-                              .initialState();
-                        },
-                        color: Colors.green,
-                        textColor: Colors.white,
-                        child: Text('Go Home')),
-                  )
+                  Text('Success'),
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context, 'success');
+                        CubitProvider.of<UserProjectPostCubit>(context)
+                            .initialState();
+                      },
+                      child: Text('Go Home'))
                 ],
               ),
             );
@@ -84,44 +59,14 @@ class AddScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Text(state.error),
-
-                  Center(
-                    child: Container(
-                      child: FlareActor(
-                        "assets/error.flr",
-                        animation: "Error",
-                      ),
-                      alignment: Alignment.center,
-                      width: 300,
-                      height: 300,
-                    ),
-                  ),
-                  DelayedDisplay(
-                    child: Text(
-                      state.error,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 18,
-                        color: Colors.red,
-                      ),
-                    ),
-                  ),
-
-                  verticalSpaceSmall,
-
-                  DelayedDisplay(
-                    delay: Duration(seconds: 1, milliseconds: 200),
-                    child: FlatButton(
-                        onPressed: () {
-                          Navigator.pop(context, 'success');
-                          CubitProvider.of<UserProjectPostCubit>(context)
-                              .initialState();
-                        },
-                        color: Colors.green,
-                        textColor: Colors.white,
-                        child: Text('Go Home')),
-                  )
+                  Text(state.error),
+                  FlatButton(
+                      onPressed: () {
+                        Navigator.pop(context, 'success');
+                        CubitProvider.of<UserProjectPostCubit>(context)
+                            .initialState();
+                      },
+                      child: Text('Go Home'))
                 ],
               ),
             );
@@ -134,13 +79,13 @@ class AddScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Add Project",
+                  child: Text("Edit Project",
                       style: GoogleFonts.oxygen(
                           fontSize: 31, fontWeight: FontWeight.bold)),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text("Fill the following form correctly :",
+                  child: Text("Edit the following form correctly :",
                       style: GoogleFonts.oxygen(
                           fontSize: 17, fontWeight: FontWeight.w400)),
                 ),
@@ -150,7 +95,7 @@ class AddScreen extends StatelessWidget {
                     padding: EdgeInsets.only(left: 5, right: 5),
                     // decoration:
                     //     BoxDecoration(border: Border.all(color: Colors.black)),
-                    child: ProjectForm(username, email))
+                    child: ProjectForm())
               ],
             ),
           ));
@@ -161,10 +106,6 @@ class AddScreen extends StatelessWidget {
 }
 
 class ProjectForm extends StatefulWidget {
-  final String username;
-  final String email;
-
-  ProjectForm(this.username, this.email);
   @override
   _ProjectFormState createState() => _ProjectFormState();
 }
@@ -356,8 +297,6 @@ class _ProjectFormState extends State<ProjectForm> {
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
-                  _author = widget.username;
-                  _authorEmail = widget.email;
                   PostProject project = PostProject(
                       _title,
                       _author,
@@ -384,16 +323,3 @@ class _ProjectFormState extends State<ProjectForm> {
     );
   }
 }
-
-// class SuccessTick extends StatefulWidget {
-//   @override
-//   _SuccessTickState createState() => _SuccessTickState();
-// }
-
-// class _SuccessTickState extends State<SuccessTick> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return new FlareActor("assets/tick.flr",
-//         alignment: Alignment.center, fit: BoxFit.contain, animation: "done");
-//   }
-// }

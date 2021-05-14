@@ -39,7 +39,7 @@ class AuthApi implements IAuthApi {
   Future<Result<String>> _postCredential(
       String endpoint, Credentail credentail) async {
     Map<String, String> headers = {'Content-Type': 'application/json'};
-    // print("Post Credential called");
+    print("Post Credential called");
     // print(endpoint + "inside post credential");
     // print(credentail.email + " inside post credential " + credentail.password);
     // var response = await http.post(endpoint,
@@ -64,7 +64,11 @@ class AuthApi implements IAuthApi {
     _localStore.saveEmail(email);
     print("saved user email");
 
+    final username = UserName(json['data']['name']);
+
     print("Usrname fetched is :: " + json['data']['name'].toString());
+    _localStore.saveName(username);
+    print("saved user name");
 
     // print("value of token fetched in auth api .dart::" + json['token']);
     return json['token'] != null

@@ -36,6 +36,7 @@ class CustomTextField extends StatelessWidget {
     return Container(
         height: height,
         child: TextField(
+          focusNode: null,
           obscureText: obscure ?? false,
           keyboardType: keyboardType ?? TextInputType.text,
           onSubmitted: onSubmitted,

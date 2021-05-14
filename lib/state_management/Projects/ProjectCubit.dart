@@ -43,7 +43,7 @@ class ProjectCubit extends Cubit<ProjectState> {
     final project = await _api.getProject(id: id);
     project != null
         ? emit(ProjectLoaded(project))
-        : emit(ErrorState('restaurant not found'));
+        : emit(ErrorState('Project not found'));
   }
 
   _startLoading() {

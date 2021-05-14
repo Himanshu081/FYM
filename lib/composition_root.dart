@@ -30,6 +30,7 @@ import 'package:fym_test_1/ui/homepage/homepage.dart';
 import 'package:fym_test_1/ui/homepage/search_result_page.dart';
 import 'package:fym_test_1/ui/homepage/search_results_page_adapters.dart';
 import 'package:fym_test_1/ui/homepage/userProjectsScreen.dart';
+import 'auth/src/token.dart';
 import 'infra/api/auth_api_contract.dart';
 import 'infra/api/auth_api.dart';
 import 'auth/src/signup_service.dart';
@@ -49,6 +50,9 @@ class CompositionRoot {
   static AuthManager manager;
   static ProjectApi _api;
   static AuthApi sut;
+  // static UserName username;
+  // static Email email;
+  // static var myusername1 = '';
 
   static configure() async {
     _sharedPreferences = await SharedPreferences.getInstance();
@@ -71,13 +75,28 @@ class CompositionRoot {
 
   static Future<Widget> start() async {
     final token = await _localStore.fetch();
+
     // final authType = await _localStore.fetchAuthType();
     final service = manager.emailAuth("email");
     return token == null ? composeAuthUi() : composeHomeUi(service);
   }
 
+  // static Future<Widget> getDetails() async {
+  //
+  //   final myemail = await _localStore.fetchEmail();
+  //   username = myusername;
+  //   email = myemail;
+  // }
+  // static getUsername() async {
+  //   final myusername = await _localStore.fetchName();
+  //   myusername1 += myusername.name;
+
+  //   // return myusername.m;
+  // }
+
   static Widget composeAuthUi() {
     // print(_baseUrl);
+
     IAuthApi _api = AuthApi(_baseUrl, _client);
     AuthCubit _authCubit = AuthCubit(_localStore);
     ISignupService _signupService = SignUpService(_api);
@@ -93,6 +112,14 @@ class CompositionRoot {
 
   static Widget composeHomeUi(IAuthService service) {
     // IProjectApi _api = ProjectApi(_iHttp, _baseUrl);
+    // final UserName username =  _localStore.fetchName();
+    // print("inside compose home ui");
+
+    // // getUsername();
+    // print("username inside comopose home ui ::" + myusername1);
+
+    // String myemail = email.email;
+    // getDetails();
     ProjectCubit _projectCubit = ProjectCubit(_api);
     UserProjectCubit userProjectCubit = UserProjectCubit(_api, _localStore);
     UserProjectPostCubit userProjectPostCubit = UserProjectPostCubit(_api);

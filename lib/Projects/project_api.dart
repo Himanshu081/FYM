@@ -61,7 +61,7 @@ class ProjectApi implements IProjectApi {
 
   @override
   Future<String> addUserProject(PostProject project) async {
-    print("Posr the  user projects of project_api.dart caleed");
+    print("Post the  user projects of project_api.dart caleed");
     print(
         "project details received inside adduserproject of project _api.dart::" +
             project.toString());

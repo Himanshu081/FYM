@@ -5,6 +5,7 @@ import 'package:fym_test_1/state_management/Projects/User_Projects.dart/getuserp
 import 'package:fym_test_1/state_management/Projects/User_Projects.dart/getuserprojectState.dart';
 import 'package:fym_test_1/state_management/Projects/User_Projects.dart/postprojectcubit.dart';
 import 'package:fym_test_1/ui/homepage/addScreen.dart';
+import 'package:fym_test_1/ui/homepage/editPage.dart';
 import 'package:fym_test_1/widgets/styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,6 +13,10 @@ class UserProjectsScreen extends StatefulWidget {
   // final UserProjectCubit userProjectCubit;
 
   // UserProjectsScreen(this.userProjectCubit);
+  final String username;
+  final String email;
+
+  UserProjectsScreen(this.username, this.email);
 
   @override
   _UserProjectsScreenState createState() => _UserProjectsScreenState();
@@ -48,7 +53,7 @@ class _UserProjectsScreenState extends State<UserProjectsScreen> {
                 .push(MaterialPageRoute(builder: (_) {
               return CubitProvider.value(
                   value: CubitProvider.of<UserProjectPostCubit>(context),
-                  child: AddScreen());
+                  child: AddScreen(widget.username, widget.email));
             }));
             if (result != null && result == "success") {
               CubitProvider.of<UserProjectCubit>(context).getAllUserProjects();
@@ -159,15 +164,26 @@ class _UserProjectsScreenState extends State<UserProjectsScreen> {
               Row(
                 children: [
                   IconButton(
-                    icon: const Icon(
-                      Icons.edit,
-                      size: 19,
-                    ),
-                    tooltip: 'Edit Project',
-                    onPressed: () {
-                      print(project.sId);
-                    },
-                  ),
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 19,
+                      ),
+                      tooltip: 'Edit Project',
+                      onPressed: () async {
+                        // var result=await Navigator.of(context)
+                        var result = await Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (_) {
+                          return CubitProvider.value(
+                              value: CubitProvider.of<UserProjectPostCubit>(
+                                  context),
+                              child: EditScreen(
+                                  widget.username, widget.email, project));
+                        }));
+                        if (result != null && result == "success") {
+                          CubitProvider.of<UserProjectCubit>(context)
+                              .getAllUserProjects();
+                        }
+                      }),
                   VerticalDivider(),
                   IconButton(
                     icon: const Icon(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/auth/src/auth_service_contract.dart';
+import 'package:fym_test_1/auth/src/token.dart';
+import 'package:fym_test_1/cache/local_store.dart';
+import 'package:fym_test_1/cache/local_store_contract.dart';
 // import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/models/Project.dart';
 import 'package:fym_test_1/state_management/Projects/Filterby_state.dart';
@@ -19,10 +22,13 @@ import 'package:fym_test_1/state_management/auth/auth_state.dart' as authState;
 import 'package:fym_test_1/widgets/styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProjectListPage extends StatefulWidget {
   final IHomePageAdapter adapter;
   final IAuthService service;
+  // final String email;
+  // final String username;
 
   ProjectListPage(this.adapter, this.service);
 
@@ -48,16 +54,75 @@ class _ProjectListPageState extends State<ProjectListPage> {
   // SortBy _selectedFilter;
   List _listItems = ["Title", "Skills"];
   String choosenValue = '';
+  // UserName username;
+  // Email email;
+  // String myemail = '';
+  // String myusername = '';
+  // String details;
+  var myusername = '';
+  var myemail = '';
+  // SharedPreferences _sharedPreferences =  await SharedPreferences.getInstance();
 
   @override
   void initState() {
-    CubitProvider.of<ProjectCubit>(context).getAllProjects();
+    //
+    // print("usrname inside initstate :" + myusername);
+    print("init state of homepage called");
+    getDetails();
 
     super.initState();
+    // getUserName('CACHED_NAME').then((value) => {myusername += value});
+
+    print(myusername);
+    CubitProvider.of<ProjectCubit>(context).getAllProjects();
   }
+
+  getDetails() async {
+    var pref = await SharedPreferences.getInstance();
+    var username = pref.getString('CACHED_NAME') ?? '';
+    var email = pref.getString('CACHED_EMAIL');
+    setState(() {
+      myusername += username;
+      myemail += email;
+    });
+
+    return username;
+  }
+  //   print("get details called");
+  //   // details = await CubitProvider.of<AuthCubit>(context).getDetails();
+  //   username = await CubitProvider.of<AuthCubit>(context).getUsername();
+  //   email = await CubitProvider.of<AuthCubit>(context).getEmail();
+
+  //   // username += myusername.name;
+  //   myusername += username.name;
+  //   myemail += email.email;
+  //   setState(() {
+  //     print("value of usename and email inside init state ::" +
+  //         myusername +
+  //         myemail);
+  //   });
+  //   // print("username fetched inside getdetails::" + myusername);
+  // }
+  //   ILocalStore _localStore = LocalStore(_sharedPreferences);
+  //   UserName myusername = await _localStore.fetchName();
+  //   Email myemail = await _localStore.fetchEmail();
+  //   print("username and email fetched is ::" + myusername.name + myemail.email);
+  //   username += myusername.name;
+  //   email += myemail.email;
+  //   print(username + email);
+  // }
 
   @override
   Widget build(BuildContext context) {
+    // print("username inside build ::" + myusername + "" + details);
+    print("Build method of homepage called");
+    print(myusername);
+    // getDetails();
+    // print(myusername);
+    // print(myemail);
+
+    // print(username);
+
     return Scaffold(
       endDrawer: Drawer(
           elevation: 20.0,
@@ -65,14 +130,14 @@ class _ProjectListPageState extends State<ProjectListPage> {
             padding: EdgeInsets.zero,
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: Text('Himanshu Yadav'),
-                accountEmail: Text('developine.com@gmail.com'),
+                accountName: Text(myusername),
+                accountEmail: Text(myemail),
                 currentAccountPicture: null,
                 decoration: BoxDecoration(color: Colors.blueAccent),
               ),
               ListTile(
                 leading: Icon(Icons.business_center_outlined),
-                title: Text('About Us'),
+                title: Text('Hire Us'),
                 onTap: () {
                   // This line code will close drawer programatically....
                   Navigator.pop(context);
@@ -295,6 +360,12 @@ class _ProjectListPageState extends State<ProjectListPage> {
     );
   }
 
+  // Future<String> getUserName(String key) async {
+  //   var pref = await SharedPreferences.getInstance();
+  //   var username = pref.getString(key) ?? '';
+  //   return username;
+  // }
+
   _logout() {
     CubitProvider.of<AuthCubit>(context).signout(widget.service);
   }
@@ -317,6 +388,8 @@ class _ProjectListPageState extends State<ProjectListPage> {
   _hideLoader() {
     Navigator.of(context, rootNavigator: true).pop();
   }
+
+  void unFocus(BuildContext context) => FocusScope.of(context).unfocus();
 
   _header() => Container(
         // decoration: BoxDecoration(color: Theme.of(context).accentColor),
@@ -355,7 +428,9 @@ class _ProjectListPageState extends State<ProjectListPage> {
                             color: Colors.white,
                             width: 23,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            unFocus(context);
+                          },
                         ),
                         items: _listItems.map((value) {
                           return DropdownMenuItem(
@@ -461,7 +536,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
               ),
               onPressed: () {
-                goToUserProjectPage(context);
+                goToUserProjectPage(context, myusername, myemail);
               },
               backgroundColor: Colors.white,
               shape: StadiumBorder(
@@ -470,30 +545,30 @@ class _ProjectListPageState extends State<ProjectListPage> {
                 color: Colors.white,
               )),
             ),
-            horizontalSpaceRegular,
-            ActionChip(
-              elevation: 8.0,
-              padding: EdgeInsets.all(2.0),
-              avatar: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.account_box_outlined,
-                  color: Colors.blue,
-                  size: 20,
-                ),
-              ),
-              label: Text(
-                'Your Profile',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-              ),
-              onPressed: () {},
-              backgroundColor: Colors.white,
-              shape: StadiumBorder(
-                  side: BorderSide(
-                width: 1,
-                color: Colors.white,
-              )),
-            ),
+            // horizontalSpaceRegular,
+            // ActionChip(
+            //   elevation: 8.0,
+            //   padding: EdgeInsets.all(2.0),
+            //   avatar: CircleAvatar(
+            //     backgroundColor: Colors.white,
+            //     child: Icon(
+            //       Icons.account_box_outlined,
+            //       color: Colors.blue,
+            //       size: 20,
+            //     ),
+            //   ),
+            //   label: Text(
+            //     'Your Profile',
+            //     style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            //   ),
+            //   onPressed: () {},
+            //   backgroundColor: Colors.white,
+            //   shape: StadiumBorder(
+            //       side: BorderSide(
+            //     width: 1,
+            //     color: Colors.white,
+            //   )),
+            // ),
             horizontalSpaceRegular,
             ActionChip(
               elevation: 8.0,
@@ -825,7 +900,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
   }
 }
 
-void goToUserProjectPage(context) {
+void goToUserProjectPage(context, String username, String email) {
   Navigator.of(context).push(MaterialPageRoute(builder: (_) {
     return MultiCubitProvider(
       providers: [
@@ -836,7 +911,7 @@ void goToUserProjectPage(context) {
           value: CubitProvider.of<UserProjectPostCubit>(context),
         ),
       ],
-      child: UserProjectsScreen(),
+      child: UserProjectsScreen(username, email),
       // child: CubitProvider.value(
       // value: CubitProvider.of<UserProjectCubit>(context),
       // child: UserProjectsScreen()

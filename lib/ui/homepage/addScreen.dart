@@ -376,7 +376,7 @@ class _ProjectFormState extends State<ProjectForm> {
                 }
               },
               child: Text(
-                'Add Contact',
+                'Add Project',
                 style: TextStyle(color: Colors.white),
               ))
         ],
@@ -384,16 +384,3 @@ class _ProjectFormState extends State<ProjectForm> {
     );
   }
 }
-
-// class SuccessTick extends StatefulWidget {
-//   @override
-//   _SuccessTickState createState() => _SuccessTickState();
-// }
-
-// class _SuccessTickState extends State<SuccessTick> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return new FlareActor("assets/tick.flr",
-//         alignment: Alignment.center, fit: BoxFit.contain, animation: "done");
-//   }
-// }

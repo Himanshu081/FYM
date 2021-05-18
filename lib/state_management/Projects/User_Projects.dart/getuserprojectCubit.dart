@@ -24,6 +24,14 @@ class UserProjectCubit extends Cubit<GetUserProjects> {
         : _setPageData(projectResult);
   }
 
+  deleteUserProject(String id) async {
+    print("Delte user project called");
+    print(id);
+    _startLoading();
+    _api.deleteUserProject(id).then((value) => getAllUserProjects()).catchError(
+        (e) => emit(_showError("Cannot Delete..Please try again later..")));
+  }
+
   _startLoading() {
     emit(GetUserProjectLoading());
   }

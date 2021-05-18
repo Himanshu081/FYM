@@ -143,4 +143,17 @@ class ProjectApi implements IProjectApi {
     final List projects = json['projects'];
     return projects.map<Project>((e) => ProjectMapper.fromJson(e)).toList();
   }
+
+  @override
+  Future<void> deleteUserProject(String id) async {
+    print("delete inside project_api called");
+    final endpoint = baseurl + '/project/deleteproject/$id';
+    print(endpoint);
+    final result = await httpClient.delete(endpoint);
+    if (result.status != Status.failure)
+      return null;
+    else {
+      print("Deleeted !!");
+    }
+  }
 }

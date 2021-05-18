@@ -13,6 +13,8 @@ import 'package:fym_test_1/state_management/Projects/ProjectState.dart';
 import 'package:fym_test_1/state_management/Projects/User_Projects.dart/getuserprojectCubit.dart';
 import 'package:fym_test_1/state_management/Projects/User_Projects.dart/postprojectcubit.dart';
 import 'package:fym_test_1/state_management/auth/auth_cubit.dart';
+import 'package:fym_test_1/ui/homepage/feedback_page.dart';
+import 'package:fym_test_1/ui/homepage/hire_us_page.dart';
 import 'package:fym_test_1/ui/homepage/home_page_adapters.dart';
 import 'package:fym_test_1/ui/homepage/userProjectsScreen.dart';
 import 'package:fym_test_1/widgets/custom_text_field.dart';
@@ -140,7 +142,8 @@ class _ProjectListPageState extends State<ProjectListPage> {
                 title: Text('Hire Us'),
                 onTap: () {
                   // This line code will close drawer programatically....
-                  Navigator.pop(context);
+                  goToHireUsScreen(context);
+                  // Navigator.pop(context);
                 },
               ),
               Divider(
@@ -389,7 +392,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
     Navigator.of(context, rootNavigator: true).pop();
   }
 
-  void unFocus(BuildContext context) => FocusScope.of(context).unfocus();
+  // void unFocus(BuildContext context) => FocusScope.of(context).unfocus();
 
   _header() => Container(
         // decoration: BoxDecoration(color: Theme.of(context).accentColor),
@@ -429,7 +432,7 @@ class _ProjectListPageState extends State<ProjectListPage> {
                             width: 23,
                           ),
                           onPressed: () {
-                            unFocus(context);
+                            FocusScope.of(context).unfocus();
                           },
                         ),
                         items: _listItems.map((value) {
@@ -585,7 +588,9 @@ class _ProjectListPageState extends State<ProjectListPage> {
                 'Report Issue',
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
               ),
-              onPressed: () {},
+              onPressed: () {
+                goToFeedbackScreen(context);
+              },
               backgroundColor: Colors.white,
               shape: StadiumBorder(
                   side: BorderSide(
@@ -898,6 +903,15 @@ class _ProjectListPageState extends State<ProjectListPage> {
       ),
     );
   }
+}
+
+void goToFeedbackScreen(context) {
+  Navigator.of(context)
+      .push(MaterialPageRoute(builder: (_) => FeedBackScreen()));
+}
+
+void goToHireUsScreen(context) {
+  Navigator.of(context).push(MaterialPageRoute(builder: (_) => HireUs()));
 }
 
 void goToUserProjectPage(context, String username, String email) {

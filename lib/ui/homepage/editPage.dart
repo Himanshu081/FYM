@@ -1,3 +1,5 @@
+import 'package:delayed_display/delayed_display.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
@@ -43,14 +45,39 @@ class EditScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Success'),
-                  FlatButton(
-                      onPressed: () {
-                        Navigator.pop(context, 'success');
-                        CubitProvider.of<UserProjectPostCubit>(context)
-                            .initialState();
-                      },
-                      child: Text('Go Home'))
+                  Center(
+                    child: Container(
+                      child: FlareActor(
+                        "assets/tick.flr",
+                        animation: "done",
+                      ),
+                      width: 300,
+                      height: 300,
+                    ),
+                  ),
+                  DelayedDisplay(
+                    child: Text(
+                      "Project Edited Successfully !",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                  verticalSpaceSmall,
+                  DelayedDisplay(
+                    delay: Duration(seconds: 1, milliseconds: 200),
+                    child: FlatButton(
+                        onPressed: () {
+                          Navigator.pop(context, 'success');
+                          CubitProvider.of<UserProjectPostCubit>(context)
+                              .initialState();
+                        },
+                        color: Colors.green,
+                        textColor: Colors.white,
+                        child: Text('Go Home')),
+                  )
                 ],
               ),
             );
@@ -95,7 +122,7 @@ class EditScreen extends StatelessWidget {
                     padding: EdgeInsets.only(left: 5, right: 5),
                     // decoration:
                     //     BoxDecoration(border: Border.all(color: Colors.black)),
-                    child: ProjectForm())
+                    child: ProjectForm(this.project, this.username, this.email))
               ],
             ),
           ));
@@ -106,11 +133,20 @@ class EditScreen extends StatelessWidget {
 }
 
 class ProjectForm extends StatefulWidget {
+  final Project project;
+  final String username;
+  final String email;
+
+  ProjectForm(this.project, this.username, this.email);
+
   @override
   _ProjectFormState createState() => _ProjectFormState();
 }
 
 class _ProjectFormState extends State<ProjectForm> {
+  // final Project project;
+  // final String username;
+  // final String email;
   final _formKey = GlobalKey<FormState>();
   String _title,
       _author,
@@ -121,6 +157,8 @@ class _ProjectFormState extends State<ProjectForm> {
       _description,
       _excelLink,
       _wpLink;
+
+  // _ProjectFormState(this.project,this.username,this.email);
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +171,7 @@ class _ProjectFormState extends State<ProjectForm> {
         padding: EdgeInsets.all(10),
         children: [
           TextFormField(
+            initialValue: widget.project.title,
             decoration: InputDecoration(
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.title),
@@ -182,6 +221,7 @@ class _ProjectFormState extends State<ProjectForm> {
           verticalSpaceSmall,
           TextFormField(
             // keyboardType: TextInputType.number,
+            initialValue: widget.project.domain,
             decoration: InputDecoration(
                 prefixIcon: Icon(Icons.domain),
                 border: OutlineInputBorder(),
@@ -198,6 +238,7 @@ class _ProjectFormState extends State<ProjectForm> {
           ),
           verticalSpaceSmall,
           TextFormField(
+            initialValue: widget.project.membersReq,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
                 prefixIcon: Icon(Icons.account_box),
@@ -215,6 +256,7 @@ class _ProjectFormState extends State<ProjectForm> {
           ),
           verticalSpaceSmall,
           TextFormField(
+            initialValue: widget.project.skills,
             // keyboardType: TextInputType.number,
             decoration: InputDecoration(
                 prefixIcon: Icon(Icons.list),
@@ -233,10 +275,13 @@ class _ProjectFormState extends State<ProjectForm> {
           verticalSpaceSmall,
           TextFormField(
             maxLines: 7,
+            initialValue: widget.project.description,
 
             // keyboardType: TextInputType.number,
             decoration: InputDecoration(
+
                 // prefixIcon: Icon(Icons.description),
+
                 border: OutlineInputBorder(),
                 hintText: 'Enter Project Description'),
             validator: (value) {
@@ -251,6 +296,7 @@ class _ProjectFormState extends State<ProjectForm> {
           ),
           verticalSpaceSmall,
           TextFormField(
+            initialValue: widget.project.excelSheetLink,
             //  maxLines: 5,
             // minLines: 2,
             // keyboardType: TextInputType.number,
@@ -272,6 +318,7 @@ class _ProjectFormState extends State<ProjectForm> {
           ),
           verticalSpaceSmall,
           TextFormField(
+            initialValue: widget.project.wpGrpLink,
             //  maxLines: 5,
             // minLines: 2,
             // keyboardType: TextInputType.number,
@@ -297,10 +344,11 @@ class _ProjectFormState extends State<ProjectForm> {
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
+                  var id = widget.project.sId;
                   PostProject project = PostProject(
                       _title,
-                      _author,
-                      _authorEmail,
+                      _author = widget.username,
+                      _authorEmail = widget.email,
                       _domain,
                       _memReq,
                       _skills,
@@ -309,13 +357,13 @@ class _ProjectFormState extends State<ProjectForm> {
                       _wpLink);
 
                   CubitProvider.of<UserProjectPostCubit>(context)
-                      .addUserProject(project);
+                      .editUserProject(project, id);
                   // context.bloc<PostcontactCubit>().addContact(contact);
 
                 }
               },
               child: Text(
-                'Add Contact',
+                'Edit Project',
                 style: TextStyle(color: Colors.white),
               ))
         ],

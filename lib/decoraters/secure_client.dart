@@ -23,10 +23,11 @@ class SecureClient implements IHttpClient {
 
   @override
   Future<HttpResult> delete(String url, {Map<String, String> headers}) async {
-    // print("secure client get method called");
+    print("secure client delte method called");
+    print(url);
 
     final token = await store.fetch();
-    print("Token fetched from phone is ::" + token.toString());
+    print("Token fetched from phone is ::" + token.value);
 
     final modifiedHeader = headers ?? {};
     modifiedHeader['Content-Type'] = 'application/json';
@@ -54,7 +55,7 @@ class SecureClient implements IHttpClient {
   @override
   Future<HttpResult> put(String url, String body,
       {Map<String, String> headers}) async {
-    print("Put method caleed for posting project details");
+    print("Put method caleed for posting projectedit  details");
     print("Url received inside post method of secure client   ::" + url);
     print("Body received inside post method of secure client   ::" + body);
     final token = await store.fetch();

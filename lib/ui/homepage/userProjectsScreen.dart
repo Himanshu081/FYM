@@ -192,7 +192,8 @@ class _UserProjectsScreenState extends State<UserProjectsScreen> {
                     ),
                     tooltip: 'Delete Project',
                     onPressed: () {
-                      print(project.sId);
+                      // print(project.sId);
+                      showAlertDialog(context, project.sId);
                     },
                   )
                 ],
@@ -201,6 +202,44 @@ class _UserProjectsScreenState extends State<UserProjectsScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context, String id) {
+    // set up the buttons
+    print(id);
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Yes"),
+      onPressed: () {
+        CubitProvider.of<UserProjectCubit>(context).deleteUserProject(id);
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      // title: Text("Delete Project",
+      //     style: GoogleFonts.oxygen(fontSize: 12, fontWeight: FontWeight.w300)),
+      content: Text("Delete the selected Project ?",
+          style: GoogleFonts.oxygen(fontSize: 15, fontWeight: FontWeight.w400)),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

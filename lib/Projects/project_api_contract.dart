@@ -6,6 +6,7 @@ abstract class IProjectApi {
   Future<List<Project>> getAllProjects();
   Future<List<Project>> searchCategoryWise(String category);
   Future<String> addUserProject(PostProject project);
+  Future<void> deleteUserProject(String id);
   Future<String> editUserProject(String id, PostProject project);
   Future<List<Project>> getAllUserProjects({@required String email});
   Future<List<Project>> findProjects(

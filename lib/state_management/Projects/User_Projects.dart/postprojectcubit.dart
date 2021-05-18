@@ -34,7 +34,7 @@ class UserProjectPostCubit extends Cubit<PostUserProjects> {
   }
 
   editUserProject(PostProject project, String id) async {
-    print("add user Project called inside get project cubit ");
+    print("edit user Project called inside get project cubit ");
     print("project details received inside postprojectcubit.dart ::" +
         project.toString());
     _startLoading();

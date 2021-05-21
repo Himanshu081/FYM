@@ -5,6 +5,7 @@ import 'package:fym_test_1/Projects/ProjectMapper.dart';
 import 'package:fym_test_1/Projects/shared_Api_infra/http_client_contract.dart';
 import 'package:fym_test_1/models/PostProject.dart';
 import 'package:fym_test_1/models/Project.dart';
+import 'package:fym_test_1/models/feedback.dart';
 // import 'package:http/http.dart';
 
 class ProjectApi implements IProjectApi {
@@ -155,5 +156,28 @@ class ProjectApi implements IProjectApi {
     else {
       print("Deleeted !!");
     }
+  }
+
+  @override
+  Future<String> postFeedback(MyFeedback feedback, String email) async {
+    print("Post the feedbackof project_api.dart caleed");
+    // print(
+    //     "project details received inside adduserproject of project _api.dart::" +
+    //         project.toString());
+
+    final endpoint = baseurl + '/feedback/$email';
+    final body = jsonEncode({
+      "feedback": feedback.feedback,
+    });
+    print(endpoint + body.toString());
+    final result = await httpClient.post(endpoint, body);
+    print(
+        "Result from feedback api ::" + result.data + result.status.toString());
+    if (result.status == Status.failure) return null;
+    final json = jsonDecode(result.data);
+    print(json['msg']);
+    return json['msg'];
+
+    // return _parsePostProjecttoJson(result);
   }
 }

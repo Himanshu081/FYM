@@ -25,6 +25,28 @@ class GetUserProjectSuccess extends GetUserProjects {
   List<Object> get props => [userProjects];
 }
 
+class PostFeedbackLoading extends GetUserProjects {
+  const PostFeedbackLoading();
+  @override
+  List<Object> get props => [];
+}
+
+class PostFeedbackSuccessState extends GetUserProjects {
+  final String message;
+
+  PostFeedbackSuccessState(this.message);
+  @override
+  List<Object> get props => [message];
+}
+
+class PostFeedbackFail extends GetUserProjects {
+  final String error;
+
+  PostFeedbackFail(this.error);
+  @override
+  List<Object> get props => [error];
+}
+
 class GetUserProjectFail extends GetUserProjects {
   final String error;
 

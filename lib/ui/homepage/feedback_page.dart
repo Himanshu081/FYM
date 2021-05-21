@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/models/PostProject.dart';
+import 'package:fym_test_1/models/feedback.dart';
+import 'package:fym_test_1/state_management/Projects/User_Projects.dart/getuserprojectCubit.dart';
+import 'package:fym_test_1/state_management/Projects/User_Projects.dart/getuserprojectState.dart';
 import 'package:fym_test_1/state_management/Projects/User_Projects.dart/postcubit_state.dart';
 import 'package:fym_test_1/state_management/Projects/User_Projects.dart/postprojectcubit.dart';
 import 'package:fym_test_1/widgets/styles.dart';
@@ -34,32 +37,57 @@ class FeedBackScreen extends StatelessWidget {
         //         fontWeight: FontWeight.bold)
         //         ),
 
-        body: SafeArea(
-      child: SingleChildScrollView(
-          child: Padding(
-        padding: const EdgeInsets.fromLTRB(8, 25, 8, 8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Submit Feedback ",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 27),
+        body: CubitListener<UserProjectCubit, GetUserProjects>(
+      listener: (context, state) {
+        if (state is PostFeedbackLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is PostFeedbackSuccessState) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(
+              state.message,
+              style: GoogleFonts.openSans(color: Colors.white),
             ),
-            verticalSpaceSmall,
-            Text(
-              "Tell us what can we do better,what you love about the app or something that isn't right.",
-              style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
-            ),
-            verticalSpaceRegular,
-            Container(
-                // decoration:
-                //     BoxDecoration(border: Border.all(color: Colors.black)),
-                height: 400,
-                child: FeedbackForm())
-          ],
-        ),
-      )),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 1, milliseconds: 300),
+          ));
+        } else if (state is GetUserProjectFail) {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(state.error,
+                style: GoogleFonts.openSans(color: Colors.white)),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 1, milliseconds: 300),
+          ));
+        }
+      },
+      child: SafeArea(
+        child: SingleChildScrollView(
+            child: Padding(
+          padding: const EdgeInsets.fromLTRB(8, 25, 8, 8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Submit Feedback ",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 27),
+              ),
+              verticalSpaceSmall,
+              Text(
+                "Tell us what can we do better,what you love about the app or something that isn't right.",
+                style: TextStyle(fontWeight: FontWeight.w400, fontSize: 15),
+              ),
+              verticalSpaceRegular,
+              Container(
+                  // decoration:
+                  //     BoxDecoration(border: Border.all(color: Colors.black)),
+                  height: 400,
+                  child: FeedbackForm())
+            ],
+          ),
+        )),
+      ),
     ));
   }
 }
@@ -138,8 +166,10 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
 
-                      // CubitProvider.of<UserProjectPostCubit>(context)
-                      //     .addUserProject(project);
+                      MyFeedback _feedback = MyFeedback(_feedbackdescription);
+
+                      CubitProvider.of<UserProjectCubit>(context)
+                          .postFeedback(_feedback);
                       // context.bloc<PostcontactCubit>().addContact(contact);
 
                     }

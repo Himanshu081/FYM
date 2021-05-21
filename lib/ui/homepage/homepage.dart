@@ -906,8 +906,13 @@ class _ProjectListPageState extends State<ProjectListPage> {
 }
 
 void goToFeedbackScreen(context) {
-  Navigator.of(context)
-      .push(MaterialPageRoute(builder: (_) => FeedBackScreen()));
+  Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+    return CubitProvider.value(
+        value: CubitProvider.of<UserProjectCubit>(context),
+        child: FeedBackScreen());
+  }));
+  // Navigator.of(context)
+  //     .push(MaterialPageRoute(builder: (_) => FeedBackScreen()));
 }
 
 void goToHireUsScreen(context) {

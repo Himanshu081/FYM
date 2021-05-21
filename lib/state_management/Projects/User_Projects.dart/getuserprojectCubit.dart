@@ -2,6 +2,7 @@ import 'package:cubit/cubit.dart';
 import 'package:fym_test_1/Projects/project_api_contract.dart';
 import 'package:fym_test_1/cache/local_store_contract.dart';
 import 'package:fym_test_1/models/Project.dart';
+import 'package:fym_test_1/models/feedback.dart';
 import 'package:fym_test_1/state_management/Projects/User_Projects.dart/getuserprojectState.dart';
 // import 'package:fym_test_1/state_management/Projects/ProjectState.dart';
 
@@ -24,6 +25,16 @@ class UserProjectCubit extends Cubit<GetUserProjects> {
         : _setPageData(projectResult);
   }
 
+  postFeedback(MyFeedback feedback) async {
+    print("post feeedback called inside get project cubit ");
+    _startFeedbackLoading();
+    final email = await store.fetchEmail();
+    final feedbackResult = await _api.postFeedback(feedback, email.email);
+    feedbackResult == null || feedbackResult.isEmpty
+        ? _showError('Something Went Wrong..Please try again later')
+        : _setFeedBackData(feedbackResult);
+  }
+
   deleteUserProject(String id) async {
     print("Delte user project called");
     print(id);
@@ -36,8 +47,16 @@ class UserProjectCubit extends Cubit<GetUserProjects> {
     emit(GetUserProjectLoading());
   }
 
+  _startFeedbackLoading() {
+    emit(PostFeedbackLoading());
+  }
+
   _setPageData(List<Project> result) {
     emit(GetUserProjectSuccess(result));
+  }
+
+  _setFeedBackData(String result) {
+    emit(PostFeedbackSuccessState(result));
   }
 
   _showError(String error) {

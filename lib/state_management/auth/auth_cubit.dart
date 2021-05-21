@@ -13,6 +13,8 @@ class AuthCubit extends Cubit<AuthState> {
   final ILocalStore localStore;
   AuthCubit(this.localStore) : super(InitialState());
 
+  feedback(String feedba) {}
+
   signin(IAuthService authService) async {
     // print("service passed in auth cubit is :" + authService.toString());
     // print("Inside Auth Cubit !!!");
@@ -27,22 +29,22 @@ class AuthCubit extends Cubit<AuthState> {
     _setResultOfAuthState(result);
   }
 
-  Future<String> getDetails() async {
-    final username = await localStore.fetchName();
-    final email = await localStore.fetchEmail();
-    final String mystring = username.name + "+" + email.email;
-    return mystring;
-  }
+  // Future<String> getDetails() async {
+  //   final username = await localStore.fetchName();
+  //   final email = await localStore.fetchEmail();
+  //   final String mystring = username.name + "+" + email.email;
+  //   return mystring;
+  // }
 
-  Future<UserName> getUsername() async {
-    final username = await localStore.fetchName();
-    return username;
-  }
+  // Future<UserName> getUsername() async {
+  //   final username = await localStore.fetchName();
+  //   return username;
+  // }
 
-  Future<Email> getEmail() async {
-    final email = await localStore.fetchEmail();
-    return email;
-  }
+  // Future<Email> getEmail() async {
+  //   final email = await localStore.fetchEmail();
+  //   return email;
+  // }
 
   signout(IAuthService authService) async {
     _startLoading();

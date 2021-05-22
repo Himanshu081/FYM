@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:fym_test_1/Projects/project_api_contract.dart';
 import 'package:fym_test_1/Projects/ProjectMapper.dart';
@@ -45,9 +47,18 @@ class ProjectApi implements IProjectApi {
     // print("Get all projects of project_api.dart caleed");
     final endpoint = baseurl + '/project/allprojects';
     // print(endpoint);
-    final result = await httpClient.get(endpoint);
-    // print(result.data);
-    return _parseProjecttoJson(result);
+    try {
+      final result = await httpClient.get(endpoint);
+      return _parseProjecttoJson(result);
+    } on TimeoutException {
+      throw ("Something went wrong...Please Restart the app");
+    } on SocketException {
+      throw Exception('No Internet connection');
+    } on HttpException {
+      throw ("Something went wrong...Please Refresh");
+    } on FormatException {
+      throw ("Something went wrong...Please Restart the app");
+    }
   }
 
   @override
@@ -55,9 +66,13 @@ class ProjectApi implements IProjectApi {
     print("Get all user projects of project_api.dart caleed");
     final endpoint = baseurl + '/project/projectbyuser/$email';
     print(endpoint);
-    final result = await httpClient.get(endpoint);
-    print(result.data);
-    return _parseProjecttoJson(result);
+    try {
+      final result = await httpClient.get(endpoint);
+      print(result.data);
+      return _parseProjecttoJson(result);
+    } catch (_) {
+      throw Exception("Something is not right...");
+    }
   }
 
   @override
@@ -80,12 +95,20 @@ class ProjectApi implements IProjectApi {
       "wp_grp_link": project.wpl
     });
     print(endpoint + body.toString());
-    final result = await httpClient.post(endpoint, body);
-    print(result.data + result.status.toString());
-    if (result.status == Status.failure) return null;
-    final json = jsonDecode(result.data);
-    print(json['msg']);
-    return json['msg'];
+    try {
+      final result = await httpClient.post(endpoint, body);
+      print(result.data + result.status.toString());
+      if (result.status == Status.failure) return null;
+      final json = jsonDecode(result.data);
+      print(json['msg']);
+      return json['msg'];
+    } on SocketException {
+      return ('No Internet connection 😑');
+    } on HttpException {
+      return ("Something went wrong...Please Refresh");
+    } on FormatException {
+      return ("Something went wrong...Please Restart the app");
+    }
 
     // return _parsePostProjecttoJson(result);
   }
@@ -110,14 +133,20 @@ class ProjectApi implements IProjectApi {
       "wp_grp_link": project.wpl
     });
     print(endpoint + body.toString());
-    final result = await httpClient.put(endpoint, body);
-    print(result.data + result.status.toString());
-    if (result.status == Status.failure) return null;
-    final json = jsonDecode(result.data);
-    print(json['msg']);
-    return json['msg'];
-
-    // return _parsePostProjecttoJson(result);
+    try {
+      final result = await httpClient.put(endpoint, body);
+      print(result.data + result.status.toString());
+      if (result.status == Status.failure) return null;
+      final json = jsonDecode(result.data);
+      print(json['msg']);
+      return json['msg'];
+    } on SocketException {
+      return ('No Internet connection 😑');
+    } on HttpException {
+      return ("Something went wrong...Please Refresh");
+    } on FormatException {
+      return ("Something went wrong...Please Restart the app");
+    }
   }
 
   // _parsePostProjecttoJson()
@@ -170,13 +199,22 @@ class ProjectApi implements IProjectApi {
       "feedback": feedback.feedback,
     });
     print(endpoint + body.toString());
-    final result = await httpClient.post(endpoint, body);
-    print(
-        "Result from feedback api ::" + result.data + result.status.toString());
-    if (result.status == Status.failure) return null;
-    final json = jsonDecode(result.data);
-    print(json['msg']);
-    return json['msg'];
+    try {
+      final result = await httpClient.post(endpoint, body);
+      print("Result from feedback api ::" +
+          result.data +
+          result.status.toString());
+      if (result.status == Status.failure) return null;
+      final json = jsonDecode(result.data);
+      print(json['msg']);
+      return json['msg'];
+    } on SocketException {
+      return ('No Internet connection 😑');
+    } on HttpException {
+      return ("Something went wrong...Please Refresh");
+    } on FormatException {
+      return ("Something went wrong...Please Restart the app");
+    }
 
     // return _parsePostProjecttoJson(result);
   }

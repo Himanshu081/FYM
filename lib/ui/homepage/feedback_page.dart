@@ -50,7 +50,7 @@ class FeedBackScreen extends StatelessWidget {
               style: GoogleFonts.openSans(color: Colors.white),
             ),
             backgroundColor: Colors.green,
-            duration: Duration(seconds: 1, milliseconds: 300),
+            duration: Duration(seconds: 1, milliseconds: 500),
           ));
         } else if (state is GetUserProjectFail) {
           Scaffold.of(context).showSnackBar(SnackBar(

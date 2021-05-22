@@ -37,7 +37,8 @@ dependencies:
   flutter_svg:
   url_launcher: ^5.7.10
   flare_flutter: ^1.7.1
-  delayed_display: ^1.1.0   
+  delayed_display: ^1.1.0
+    
 
 
 
@@ -54,7 +55,7 @@ dev_dependencies:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/logo_800_1.png
+  image: assets/fym_212.png
   android: true
   ios: true
 

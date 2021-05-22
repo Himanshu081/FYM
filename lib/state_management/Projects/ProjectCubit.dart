@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:cubit/cubit.dart';
 import 'package:fym_test_1/Projects/project_api_contract.dart';
 import 'package:fym_test_1/models/Project.dart';
@@ -11,12 +14,17 @@ class ProjectCubit extends Cubit<ProjectState> {
   getAllProjects() async {
     // print("Get all Projects called inside project cubit ");
     _startLoading();
-    final projectResult = await _api.getAllProjects();
-    // print("Projects received in project cubit " + projectResult.toString());
-
-    projectResult == null || projectResult.isEmpty
-        ? _showError('No projects found')
-        : _setPageData(projectResult);
+    try {
+      final projectResult = await _api.getAllProjects();
+      // print("Projects received in project cubit " + projectResult.toString());
+      projectResult == null || projectResult.isEmpty
+          ? _showError('No projects found')
+          : _setPageData(projectResult);
+    } on TimeoutException catch (e) {
+      _showError(e.message);
+    } on SocketException catch (e) {
+      _showError(e.toString());
+    }
   }
 
   search(String query, String filter) async {

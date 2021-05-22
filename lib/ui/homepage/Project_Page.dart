@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fym_test_1/models/Project.dart';
 // import 'package:fym_test_1/state_management/Projects/ProjectCubit.dart';
@@ -251,6 +252,62 @@ class ProjectPage extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.w500)),
+                  verticalSpaceLarge,
+                  Text(
+                    "Whatsapp Group Link :",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey),
+                  ),
+                  verticalSpaceSmall,
+                  RichText(
+                      text: new TextSpan(
+                          text: 'Click Here',
+                          style: new TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              print('whatsapp pressed');
+                              final url = project.wpGrpLink;
+                              print(url);
+                              if (await canLaunch(url)) {
+                                await launch(
+                                  url,
+                                  forceSafariVC: false,
+                                );
+                              }
+                            })),
+                  verticalSpaceLarge,
+                  Text(
+                    "Google Sheets Link :",
+                    style: GoogleFonts.montserrat(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey),
+                  ),
+                  verticalSpaceSmall,
+                  RichText(
+                      text: new TextSpan(
+                          text: 'Click Here',
+                          style: new TextStyle(
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              print("excel pressed");
+                              final url = project.excelSheetLink;
+                              print(url);
+                              if (await canLaunch(url)) {
+                                await launch(
+                                  url,
+                                  forceSafariVC: false,
+                                );
+                              }
+                            })),
                 ],
               ),
             ),

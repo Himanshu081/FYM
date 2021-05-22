@@ -1,9 +1,14 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/auth/src/auth_service_contract.dart';
-import 'package:fym_test_1/auth/src/token.dart';
-import 'package:fym_test_1/cache/local_store.dart';
-import 'package:fym_test_1/cache/local_store_contract.dart';
+// import 'package:fym_test_1/auth/src/token.dart';
+// import 'package:fym_test_1/cache/local_store.dart';
+// import 'package:fym_test_1/cache/local_store_contract.dart';
+// import 'package:pull_to_refresh/pull_to_refresh.dart';
+
 // import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/models/Project.dart';
 import 'package:fym_test_1/state_management/Projects/Filterby_state.dart';
@@ -76,7 +81,13 @@ class _ProjectListPageState extends State<ProjectListPage> {
     // getUserName('CACHED_NAME').then((value) => {myusername += value});
 
     print(myusername);
-    CubitProvider.of<ProjectCubit>(context).getAllProjects();
+    try {
+      CubitProvider.of<ProjectCubit>(context).getAllProjects();
+    } on TimeoutException catch (e) {
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    } on SocketException catch (e) {
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 
   getDetails() async {
@@ -125,239 +136,243 @@ class _ProjectListPageState extends State<ProjectListPage> {
 
     // print(username);
 
-    return Scaffold(
-      endDrawer: Drawer(
-          elevation: 20.0,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                accountName: Text(myusername),
-                accountEmail: Text(myemail),
-                currentAccountPicture: null,
-                decoration: BoxDecoration(color: Colors.blueAccent),
-              ),
-              ListTile(
-                leading: Icon(Icons.business_center_outlined),
-                title: Text('Hire Us'),
-                onTap: () {
-                  // This line code will close drawer programatically....
-                  goToHireUsScreen(context);
-                  // Navigator.pop(context);
-                },
-              ),
-              Divider(
-                height: 2.0,
-              ),
-              ListTile(
-                leading: SizedBox(
-                    height: 30,
-                    width: 20, // fixed width and height
-                    child: Image.asset(
-                      'assets/whatsapp.png',
-                      color: Color(0xff808080),
-                    )),
-                title: Text('Join us on Whatsapp'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              Divider(
-                height: 2.0,
-              ),
-              ListTile(
-                leading: Icon(Icons.error),
-                title: Text('Report Issue'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.exit_to_app,
-                  color: Colors.red,
+    return RefreshIndicator(
+      onRefresh: _pullRefresh,
+      child: Scaffold(
+        endDrawer: Drawer(
+            elevation: 20.0,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                UserAccountsDrawerHeader(
+                  accountName: Text(myusername),
+                  accountEmail: Text(myemail),
+                  currentAccountPicture: null,
+                  decoration: BoxDecoration(color: Colors.blueAccent),
                 ),
-                title: Text('Logout'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          )),
-      appBar: AppBar(
-        // leading: IconButton(
-        //   icon: Icon(Icons.accessible),
-        //   onPressed: () => Scaffold.of(context).openDrawer(),
-        // ),
-        backgroundColor: Colors.transparent,
-        iconTheme: IconThemeData(color: Colors.black),
-        elevation: 0,
-        title: RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-              text: 'FINDYOUR\n',
-              children: <TextSpan>[
-                TextSpan(
-                    text: 'TEAMMATES',
-                    style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w300,
-                        fontSize: 18,
-                        color: Colors.green))
+                ListTile(
+                  leading: Icon(Icons.business_center_outlined),
+                  title: Text('Hire Us'),
+                  onTap: () {
+                    // This line code will close drawer programatically....
+                    goToHireUsScreen(context);
+                    // Navigator.pop(context);
+                  },
+                ),
+                Divider(
+                  height: 2.0,
+                ),
+                ListTile(
+                  leading: SizedBox(
+                      height: 30,
+                      width: 20, // fixed width and height
+                      child: Image.asset(
+                        'assets/whatsapp.png',
+                        color: Color(0xff808080),
+                      )),
+                  title: Text('Join us on Whatsapp'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                Divider(
+                  height: 2.0,
+                ),
+                ListTile(
+                  leading: Icon(Icons.error),
+                  title: Text('Report Issue'),
+                  onTap: () {
+                    goToFeedbackScreen(context);
+                    // Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.exit_to_app,
+                    color: Colors.red,
+                  ),
+                  title: Text('Logout'),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                )
               ],
-              style: GoogleFonts.oxygen(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                  color: Colors.black)),
-        ),
-        centerTitle: true,
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: new Image.asset(
-                "assets/vector-1.png",
-                width: 35,
-                height: 35,
-              ),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            ),
+            )),
+        appBar: AppBar(
+          // leading: IconButton(
+          //   icon: Icon(Icons.accessible),
+          //   onPressed: () => Scaffold.of(context).openDrawer(),
+          // ),
+          backgroundColor: Colors.transparent,
+          iconTheme: IconThemeData(color: Colors.black),
+          elevation: 0,
+          title: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+                text: 'FINDYOUR\n',
+                children: <TextSpan>[
+                  TextSpan(
+                      text: 'TEAMMATES',
+                      style: GoogleFonts.montserrat(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 18,
+                          color: Colors.green))
+                ],
+                style: GoogleFonts.oxygen(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                    color: Colors.black)),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.only(right: 16),
-          //   child: IconButton(
-          //     icon: Icon(
-          //       Icons.power_settings_new_rounded,
-          //       size: 26.0,
-          //       color: Colors.black,
-          //     ),
-          //     onPressed: () {
-          //       _logout();
-          //     },
-          //   ),
-          // )
-        ],
-      ),
-      extendBodyBehindAppBar: true,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    children: [
-                      verticalSpaceSmall,
-                      Align(
-                        alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 15, left: 10),
-                          child: Text(
-                            "Ready to work\ntoday?",
-                            style: GoogleFonts.oxygen(
-                                fontSize: 27, fontWeight: FontWeight.w700),
+          centerTitle: true,
+          actions: [
+            Builder(
+              builder: (context) => IconButton(
+                icon: new Image.asset(
+                  "assets/vector-1.png",
+                  width: 35,
+                  height: 35,
+                ),
+                onPressed: () => Scaffold.of(context).openEndDrawer(),
+                tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+              ),
+            ),
+            // Padding(
+            //   padding: const EdgeInsets.only(right: 16),
+            //   child: IconButton(
+            //     icon: Icon(
+            //       Icons.power_settings_new_rounded,
+            //       size: 26.0,
+            //       color: Colors.black,
+            //     ),
+            //     onPressed: () {
+            //       _logout();
+            //     },
+            //   ),
+            // )
+          ],
+        ),
+        extendBodyBehindAppBar: true,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+                // crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      children: [
+                        verticalSpaceSmall,
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15, left: 10),
+                            child: Text(
+                              "Ready to work\ntoday?",
+                              style: GoogleFonts.oxygen(
+                                  fontSize: 27, fontWeight: FontWeight.w700),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  child: _header(),
-                  // alignment: Alignment.topCenter,
-                ),
-                verticalSpaceRegular,
-                verticalSpaceTiny,
-                Container(
-                  width: double.infinity,
-                  height: 100,
-                  margin: EdgeInsets.only(left: 10),
-                  // decoration:
-                  // BoxDecoration(border: Border.all(color: Colors.black)),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 10, top: 15),
-                        child: Text(
-                          "User Corner",
-                          style: GoogleFonts.oxygen(
-                              fontSize: 20, fontWeight: FontWeight.w600),
+                  Container(
+                    child: _header(),
+                    // alignment: Alignment.topCenter,
+                  ),
+                  verticalSpaceRegular,
+                  verticalSpaceTiny,
+                  Container(
+                    width: double.infinity,
+                    height: 100,
+                    margin: EdgeInsets.only(left: 10),
+                    // decoration:
+                    // BoxDecoration(border: Border.all(color: Colors.black)),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10, top: 15),
+                          child: Text(
+                            "User Corner",
+                            style: GoogleFonts.oxygen(
+                                fontSize: 20, fontWeight: FontWeight.w600),
+                          ),
                         ),
-                      ),
-                      userCorner(),
-                    ],
+                        userCorner(),
+                      ],
+                    ),
                   ),
-                ),
-                verticalSpaceSmall,
-                Container(
-                  child: CubitConsumer<ProjectCubit, ProjectState>(
-                      builder: (_, state) {
-                    if (state is ProjectsLoaded) {
-                      currentState = state;
-                      if (projects.length != 0) {
+                  verticalSpaceSmall,
+                  Container(
+                    child: CubitConsumer<ProjectCubit, ProjectState>(
+                        builder: (_, state) {
+                      if (state is ProjectsLoaded) {
+                        currentState = state;
+                        if (projects.length != 0) {
+                          projects.clear();
+                          projects.addAll(state.projects);
+                        }
                         projects.clear();
                         projects.addAll(state.projects);
+                        // _updateHeader();
                       }
-                      projects.clear();
-                      projects.addAll(state.projects);
-                      // _updateHeader();
-                    }
 
-                    if (currentState == null)
-                      return Center(child: CircularProgressIndicator());
+                      if (currentState == null)
+                        return Center(child: CircularProgressIndicator());
 
-                    return _buildListOfProjects();
-                  }, listener: (context, state) {
-                    if (state is ErrorState) {
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          state.message,
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              .copyWith(color: Colors.white, fontSize: 16.0),
+                      return _buildListOfProjects();
+                    }, listener: (context, state) {
+                      if (state is ErrorState) {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            state.message,
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption
+                                .copyWith(color: Colors.white, fontSize: 16.0),
+                          ),
+                        ));
+                      }
+                    }),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: CubitListener<AuthCubit, authState.AuthState>(
+                        child: Container(
+                          width: 0.0,
+                          height: 0.0,
                         ),
-                      ));
-                    }
-                  }),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: CubitListener<AuthCubit, authState.AuthState>(
-                      child: Container(
-                        width: 0.0,
-                        height: 0.0,
-                      ),
-                      listener: (context, state) {
-                        if (state is authState.LoadingState) {
-                          return _showLoader();
-                        }
-                        if (state is authState.SignOutSuccessState) {
-                          widget.adapter.onUserLogout(context);
-                        }
-                        if (state is authState.ErrorState) {
-                          Scaffold.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                state.message,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .caption
-                                    .copyWith(
-                                      color: Colors.white,
-                                      fontSize: 16.0,
-                                    ),
+                        listener: (context, state) {
+                          if (state is authState.LoadingState) {
+                            return _showLoader();
+                          }
+                          if (state is authState.SignOutSuccessState) {
+                            widget.adapter.onUserLogout(context);
+                          }
+                          if (state is authState.ErrorState) {
+                            Scaffold.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  state.message,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      .copyWith(
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                      ),
+                                ),
                               ),
-                            ),
-                          );
-                          _hideLoader();
-                        }
-                      }),
-                )
-              ]),
+                            );
+                            _hideLoader();
+                          }
+                        }),
+                  )
+                ]),
+          ),
         ),
       ),
     );
@@ -368,6 +383,27 @@ class _ProjectListPageState extends State<ProjectListPage> {
   //   var username = pref.getString(key) ?? '';
   //   return username;
   // }
+
+  Future<void> _pullRefresh() async {
+    try {
+      CubitProvider.of<ProjectCubit>(context).getAllProjects();
+    } on TimeoutException catch (e) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(e.toString(),
+            style: GoogleFonts.openSans(
+              color: Colors.white,
+            )),
+        backgroundColor: Colors.red,
+      ));
+    } on SocketException catch (e) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(
+          e.toString(),
+        ),
+        backgroundColor: Colors.red,
+      ));
+    }
+  }
 
   _logout() {
     CubitProvider.of<AuthCubit>(context).signout(widget.service);

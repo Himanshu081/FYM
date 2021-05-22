@@ -6,10 +6,10 @@
 
 
 ###### Tech Stack Used :
--Flutter
--Mongodb
--Nodejs
--Figma
+- Flutter
+- Mongodb
+- Nodejs
+- Figma
 
 ###### Team Members :
 1. Himanshu Yadav

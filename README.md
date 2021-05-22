@@ -1,5 +1,11 @@
 # Find Your Team Mates
 ######  App where users with different Domains can collaborate on different Projects all over the world.
+- Add your Projects.
+- Find other users Projects and collaborate with them.
+- Learn and grow with Oppurtunity to work with projects from around the globe.
+
+
+
 ###### Team Members :
 1. Himanshu Yadav
 2. Lakshay Baweja

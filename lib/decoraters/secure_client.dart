@@ -22,7 +22,9 @@ class SecureClient implements IHttpClient {
 
     print(modifiedHeader);
     try {
-      return await client.get(url, headers: modifiedHeader);
+      return await client
+          .get(url, headers: modifiedHeader)
+          .timeout(Duration(seconds: 12));
     } on TimeoutException catch (e) {
       return HttpResult(e.toString(), Status.failure);
       // throw Exception(e.message);

@@ -89,7 +89,7 @@ class AddScreen extends StatelessWidget {
                   Center(
                     child: Container(
                       child: FlareActor(
-                        "assets/error.flr",
+                        "assets/error_2.flr",
                         animation: "Error",
                       ),
                       alignment: Alignment.center,

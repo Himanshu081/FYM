@@ -14,17 +14,13 @@ class ProjectCubit extends Cubit<ProjectState> {
   getAllProjects() async {
     // print("Get all Projects called inside project cubit ");
     _startLoading();
-    try {
-      final projectResult = await _api.getAllProjects();
-      // print("Projects received in project cubit " + projectResult.toString());
-      projectResult == null || projectResult.isEmpty
-          ? _showError('No projects found')
-          : _setPageData(projectResult);
-    } on TimeoutException catch (e) {
-      _showError(e.message);
-    } on SocketException catch (e) {
-      _showError(e.toString());
-    }
+
+    final projectResult = await _api.getAllProjects();
+    //print("Projects received in project cubit " + projectResult.toString());
+    projectResult == null || projectResult.isEmpty
+        ? _showError(
+            'Something went wrong..Please Check your connection or Try again later')
+        : _setPageData(projectResult);
   }
 
   search(String query, String filter) async {
@@ -64,5 +60,10 @@ class ProjectCubit extends Cubit<ProjectState> {
 
   _showError(String error) {
     emit(ErrorState(error));
+  }
+
+  errorState() {
+    emit(DisplayErrorState(
+        'Something is not Right...Please Check your connection or Try again later'));
   }
 }

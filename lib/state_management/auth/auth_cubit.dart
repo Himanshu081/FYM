@@ -13,7 +13,7 @@ class AuthCubit extends Cubit<AuthState> {
   final ILocalStore localStore;
   AuthCubit(this.localStore) : super(InitialState());
 
-  feedback(String feedba) {}
+  // feedback(String feedba) {}
 
   signin(IAuthService authService) async {
     // print("service passed in auth cubit is :" + authService.toString());

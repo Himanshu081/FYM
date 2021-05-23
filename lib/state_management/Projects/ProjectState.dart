@@ -54,3 +54,11 @@ class ErrorState extends ProjectState {
   @override
   List<Object> get props => [message];
 }
+
+class DisplayErrorState extends ProjectState {
+  final String message;
+
+  const DisplayErrorState(this.message);
+  @override
+  List<Object> get props => [message];
+}

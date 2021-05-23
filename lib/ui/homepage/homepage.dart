@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:delayed_display/delayed_display.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cubit/flutter_cubit.dart';
 import 'package:fym_test_1/auth/src/auth_service_contract.dart';
@@ -30,6 +32,7 @@ import 'package:fym_test_1/widgets/styles.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProjectListPage extends StatefulWidget {
   final IHomePageAdapter adapter;
@@ -81,13 +84,8 @@ class _ProjectListPageState extends State<ProjectListPage> {
     // getUserName('CACHED_NAME').then((value) => {myusername += value});
 
     print(myusername);
-    try {
-      CubitProvider.of<ProjectCubit>(context).getAllProjects();
-    } on TimeoutException catch (e) {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-    } on SocketException catch (e) {
-      Scaffold.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
-    }
+
+    CubitProvider.of<ProjectCubit>(context).getAllProjects();
   }
 
   getDetails() async {
@@ -151,7 +149,10 @@ class _ProjectListPageState extends State<ProjectListPage> {
                   decoration: BoxDecoration(color: Colors.blueAccent),
                 ),
                 ListTile(
-                  leading: Icon(Icons.business_center_outlined),
+                  leading: Icon(
+                    Icons.business_center_outlined,
+                    color: Colors.blue,
+                  ),
                   title: Text('Hire Us'),
                   onTap: () {
                     // This line code will close drawer programatically....
@@ -167,19 +168,20 @@ class _ProjectListPageState extends State<ProjectListPage> {
                       height: 30,
                       width: 20, // fixed width and height
                       child: Image.asset(
-                        'assets/whatsapp.png',
-                        color: Color(0xff808080),
+                        'assets/telegram.png',
+                        // color: Color(0xff808080),
                       )),
-                  title: Text('Join us on Whatsapp'),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                  title: Text('Join us on Telegram'),
+                  onTap: _launchURL,
                 ),
                 Divider(
                   height: 2.0,
                 ),
                 ListTile(
-                  leading: Icon(Icons.error),
+                  leading: Icon(
+                    Icons.error,
+                    color: Colors.blue,
+                  ),
                   title: Text('Report Issue'),
                   onTap: () {
                     goToFeedbackScreen(context);
@@ -334,7 +336,55 @@ class _ProjectListPageState extends State<ProjectListPage> {
                                 .caption
                                 .copyWith(color: Colors.white, fontSize: 16.0),
                           ),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 5),
                         ));
+                        // Center(
+                        //   child: Column(
+                        //     mainAxisAlignment: MainAxisAlignment.center,
+                        //     children: [
+                        // Text(state.error),
+
+                        //       Center(
+                        //         child: Container(
+                        //           child: FlareActor(
+                        //             "assets/401_error.flr",
+                        //             animation: "error",
+                        //           ),
+                        //           alignment: Alignment.center,
+                        //           width: 300,
+                        //           height: 300,
+                        //         ),
+                        //       ),
+                        //       DelayedDisplay(
+                        //         child: Text(
+                        //           state.message,
+                        //           style: TextStyle(
+                        //             fontWeight: FontWeight.w300,
+                        //             fontSize: 18,
+                        //             color: Colors.red,
+                        //           ),
+                        //         ),
+                        //       ),
+
+                        //       verticalSpaceSmall,
+
+                        //       DelayedDisplay(
+                        //         delay: Duration(seconds: 1, milliseconds: 200),
+                        //         child: FlatButton(
+                        //             onPressed: () {
+                        //               // Navigator.pop(context, 'success');
+                        //               CubitProvider.of<ProjectCubit>(context)
+                        //                   .getAllProjects();
+                        //             },
+                        //             color: Colors.green,
+                        //             textColor: Colors.white,
+                        //             child: Text('Retry')),
+                        //       )
+                        //     ],
+                        //   ),
+                        // );
+                        // CubitProvider.of<ProjectCubit>(context).errorState();
                       }
                     }),
                   ),
@@ -383,26 +433,17 @@ class _ProjectListPageState extends State<ProjectListPage> {
   //   var username = pref.getString(key) ?? '';
   //   return username;
   // }
+  _launchURL() async {
+    const url = 'https://t.me/joinchat/b7cnwd5xqkQwMjM1';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   Future<void> _pullRefresh() async {
-    try {
-      CubitProvider.of<ProjectCubit>(context).getAllProjects();
-    } on TimeoutException catch (e) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(e.toString(),
-            style: GoogleFonts.openSans(
-              color: Colors.white,
-            )),
-        backgroundColor: Colors.red,
-      ));
-    } on SocketException catch (e) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(
-          e.toString(),
-        ),
-        backgroundColor: Colors.red,
-      ));
-    }
+    CubitProvider.of<ProjectCubit>(context).getAllProjects();
   }
 
   _logout() {

@@ -65,8 +65,8 @@ class CompositionRoot {
     // print("ihttp client creted");
     _secureClient = SecureClient(_iHttp, _localStore);
     // print("secure  client creted");
-
-    _baseUrl = "http://192.168.0.3:5000";
+    // _baseUrl = "http://192.168.0.7:5000";
+    _baseUrl = "http://ec2-54-242-82-162.compute-1.amazonaws.com:5000";
     // print("heloo from " + _baseUrl);
     manager = AuthManager(_authApi);
     _api = ProjectApi(_secureClient, _baseUrl);

@@ -18,13 +18,21 @@ class HttpClientImpl implements IHttpClient {
 
       return HttpResult(response.body, _setStatus(response));
     } on TimeoutException {
-      throw ("Something went wrong...Please Refresh");
-    } on SocketException {
-      throw ("Something went wrong...Please Refresh");
+      return HttpResult(
+          'Something went Wrong..Please check your connection or Restart the app',
+          Status.failure);
+      // return HttpResult('Error', _setStatus(response));
+      // return ("Something went wrong...Please Refresh 1");
+    } on SocketException catch (e) {
+      return HttpResult(e.toString(), Status.failure);
     } on HttpException {
-      throw ("Something went wrong...Please Refresh");
+      return HttpResult(
+          'Something went Wrong..Please check your connection or Restart the app',
+          Status.failure);
     } on FormatException {
-      throw ("Something went wrong...Please Restart the app");
+      return HttpResult(
+          'Something went Wrong..Please check your connection or Restart the app',
+          Status.failure);
     }
   }
 

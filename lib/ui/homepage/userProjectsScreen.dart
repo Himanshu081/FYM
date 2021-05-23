@@ -107,6 +107,20 @@ class _UserProjectsScreenState extends State<UserProjectsScreen> {
                 : Center(
                     child: Text("No Projects Found. Add Now ! "),
                   );
+          } else if (state is GetUserProjectFail) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text(
+                  state.error,
+                  style: Theme.of(context)
+                      .textTheme
+                      .caption
+                      .copyWith(color: Colors.white, fontSize: 16.0),
+                ),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 5),
+              ));
+            });
           }
           return Center(
             child: CircularProgressIndicator(),

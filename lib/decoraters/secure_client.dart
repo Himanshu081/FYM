@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:fym_test_1/Projects/shared_Api_infra/http_client_contract.dart';
 import 'package:fym_test_1/cache/local_store_contract.dart';
 
@@ -18,7 +21,14 @@ class SecureClient implements IHttpClient {
     modifiedHeader['Authorization'] = token.value;
 
     print(modifiedHeader);
-    return await client.get(url, headers: modifiedHeader);
+    try {
+      return await client.get(url, headers: modifiedHeader);
+    } on TimeoutException catch (e) {
+      return HttpResult(e.toString(), Status.failure);
+      // throw Exception(e.message);
+    } on SocketException catch (e) {
+      return HttpResult(e.toString(), Status.failure);
+    }
   }
 
   @override
@@ -34,7 +44,14 @@ class SecureClient implements IHttpClient {
     modifiedHeader['Authorization'] = token.value;
 
     print(modifiedHeader);
-    return await client.delete(url, headers: modifiedHeader);
+    try {
+      return await client.delete(url, headers: modifiedHeader);
+    } on TimeoutException catch (e) {
+      return HttpResult(e.toString(), Status.failure);
+      // throw Exception(e.message);
+    } on SocketException catch (e) {
+      return HttpResult(e.toString(), Status.failure);
+    }
   }
 
   @override
@@ -49,7 +66,14 @@ class SecureClient implements IHttpClient {
     modifiedHeader['Authorization'] = token.value;
     print("Headers Inside post method of secure client :::" +
         modifiedHeader.toString());
-    return await client.post(url, body, headers: modifiedHeader);
+    try {
+      return await client.post(url, body, headers: modifiedHeader);
+    } on TimeoutException catch (e) {
+      return HttpResult(e.toString(), Status.failure);
+      // throw Exception(e.message);
+    } on SocketException catch (e) {
+      return HttpResult(e.toString(), Status.failure);
+    }
   }
 
   @override
@@ -64,6 +88,13 @@ class SecureClient implements IHttpClient {
     modifiedHeader['Authorization'] = token.value;
     print("Headers Inside post method of secure client :::" +
         modifiedHeader.toString());
-    return await client.put(url, body, headers: modifiedHeader);
+    try {
+      return await client.put(url, body, headers: modifiedHeader);
+    } on TimeoutException catch (e) {
+      return HttpResult(e.toString(), Status.failure);
+      // throw Exception(e.message);
+    } on SocketException catch (e) {
+      return HttpResult(e.toString(), Status.failure);
+    }
   }
 }

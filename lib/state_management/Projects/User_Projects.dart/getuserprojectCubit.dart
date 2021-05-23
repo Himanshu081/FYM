@@ -21,7 +21,8 @@ class UserProjectCubit extends Cubit<GetUserProjects> {
     print("Projects received in project cubit " + projectResult.toString());
 
     projectResult == null || projectResult.isEmpty
-        ? _showError('No projects found')
+        ? _showError(
+            'Something went wrong...Please Check your connection or try again later')
         : _setPageData(projectResult);
   }
 

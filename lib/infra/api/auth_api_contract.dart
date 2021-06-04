@@ -5,6 +5,6 @@ import 'package:fym_test_1/auth/src/token.dart';
 
 abstract class IAuthApi {
   Future<Result<String>> apisignIn(Credentail credentail);
-  Future<Result<String>> signUp(SignUpCredentail credentail);
+  Future<String> signUp(SignUpCredentail credentail);
   Future<Result<bool>> signOut(Token token);
 }

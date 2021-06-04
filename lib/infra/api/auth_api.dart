@@ -31,7 +31,7 @@ class AuthApi implements IAuthApi {
   }
 
   @override
-  Future<Result<String>> signUp(SignUpCredentail credentail) async {
+  Future<String> signUp(SignUpCredentail credentail) async {
     var endpoint = baseUrl + '/user/signup';
     return await _signuppostCredential(endpoint, credentail);
   }
@@ -76,7 +76,7 @@ class AuthApi implements IAuthApi {
         : Result.value(json['msg']);
   }
 
-  Future<Result<String>> _signuppostCredential(
+  Future<String> _signuppostCredential(
       String endpoint, SignUpCredentail credentail) async {
     Map<String, String> headers = {'Content-Type': 'application/json'};
     final body = jsonEncode({
@@ -91,12 +91,11 @@ class AuthApi implements IAuthApi {
       headers: headers,
       body: body,
     );
-    if (response.statusCode != 200) return Result.error("Server Error");
+    if (response.statusCode != 200)
+      return "Something went wrong...Please try again later";
     var json = jsonDecode(response.body);
 
-    return json['token'] != null
-        ? Result.value(json['token'])
-        : Result.value(json['msg']);
+    return json['msg'];
   }
 
   @override

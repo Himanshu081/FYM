@@ -63,8 +63,22 @@ class AuthCubit extends Cubit<AuthState> {
     _startLoading();
     final result = await signUpService.signUp(
         user.name, user.email, user.password, user.college, user.department);
+    print("result");
     // SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    _setResultOfAuthState(result);
+    setResultofSignup(result);
+  }
+
+  void setResultofSignup(String result) {
+    if (result == null) {
+      emit(ErrorState("Something went wrong please try again... Later"));
+    } else {
+      emit(SignupSuccessState(result));
+    }
+
+    //   if (result.asError != null) {
+    //   // print("Error state called");
+    //   emit(ErrorState(result.asError.error));
+    // }
   }
 
   void _setResultOfAuthState(Result<Token> result) {

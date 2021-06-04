@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:async/async.dart';
 import 'package:fym_test_1/auth/src/signup_service.dart';
 import 'package:fym_test_1/auth/src/token.dart';
@@ -14,7 +16,7 @@ class SignUpService implements ISignupService {
   SignUpService(this._api);
 
   @override
-  Future<Result<Token>> signUp(
+  Future<String> signUp(
     String name,
     String email,
     String password,
@@ -25,7 +27,9 @@ class SignUpService implements ISignupService {
         SignUpCredentail(name, email, password, college, department);
 
     var result = await _api.signUp(credential);
-    if (result.isError) return result.asError;
-    return Result.value(Token(result.asValue.value));
+    print(result);
+    // final json = jsonDecode(result.);
+    if (result.contains("Something")) return null;
+    return result;
   }
 }

@@ -69,6 +69,21 @@ class _AuthPageState extends State<AuthPage> {
                 if (state is AuthSuccessState) {
                   widget._adapter.onAuthSuccess(context, service);
                 }
+                if (state is SignupSuccessState) {
+                  // widget._adapter.onAuthSuccess(context, service);
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        state.result,
+                        style: Theme.of(context)
+                            .textTheme
+                            .caption
+                            .copyWith(color: Colors.white, fontSize: 16.0),
+                      ),
+                    ),
+                  );
+                  _hideLoader();
+                }
                 if (state is ErrorState) {
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
@@ -195,7 +210,7 @@ class _AuthPageState extends State<AuthPage> {
             children: [
               CustomTextField(
                 inputAction: TextInputAction.next,
-                hint: 'Username',
+                hint: 'Name',
                 fontSize: 18.0,
                 fontWeight: FontWeight.normal,
                 onChanged: (val) {
@@ -206,7 +221,7 @@ class _AuthPageState extends State<AuthPage> {
               ..._emailAndPassword(),
               SizedBox(height: 30.0),
               CustomTextField(
-                obscure: true,
+                // obscure: true,
                 inputAction: TextInputAction.done,
                 hint: 'College',
                 fontSize: 18.0,

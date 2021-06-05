@@ -5,6 +5,7 @@
 - Filter Projects according to categories.
 - Find other users Projects and collaborate with them.
 - Exception Handling
+- Complete Flutter Bloc Architechture.
 - Learn and grow with Oppurtunity to work with projects from around the globe.
 - App Link :: Will be Updated Soon...
 

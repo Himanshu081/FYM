@@ -6,7 +6,7 @@
 - Filter Projects according to categories.
 - Find other users Projects and collaborate with them.
 - Exception Handling
-- Custom Nodejs-Monodb Database
+- Custom Nodejs-Mongodb Database
 - Complete Flutter Bloc Architechture.
 - Learn and grow with Oppurtunity to work with projects from around the globe.
 - Dark theme coming soon.

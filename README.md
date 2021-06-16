@@ -11,7 +11,7 @@
 - Complete Flutter Bloc Architechture.
 - Dark theme coming soon.
 - Learn and grow with Oppurtunity to work with projects from around the globe.
-- App Link :: Will be Updated Soon...
+- Playstore App Link :: Will be Updated Soon...
 
 
 ###### Tech Stack Used :

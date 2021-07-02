@@ -6,9 +6,10 @@
 - Filter Projects according to categories.
 - Find other users Projects and collaborate with them.
 - Dynamic and User Friendly UI
+- input field validations
 - Exception Handling
 - Custom Nodejs-Mongodb Database
-- Complete Flutter Bloc Architechture.
+- Complete Flutter Bloc Architechture1.
 - Dark theme coming soon.
 - Learn and grow with Oppurtunity to work with projects from around the globe.
 - Playstore App Link :: Will be Updated Soon...
